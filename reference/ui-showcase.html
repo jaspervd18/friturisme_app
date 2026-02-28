@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Friturisme UI Showcase</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Outfit:wght@300;400;500;600;700&family=DM+Serif+Text:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{--fy:#F2C744;--fo:#E8742A;--sb:#5C2E0E;--mc:#FFF8E7;--br:#C4342D;--fg:#2D6B4A;--nd:#1A1410;--nw:#231B14;--nc:#302520;--vw:#FFFDF5;--kg:#D4952B;--t1:rgba(255,248,231,.55);--t2:rgba(255,248,231,.35);--t3:rgba(255,248,231,.15)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#1A1410;color:var(--vw);font-family:'Outfit',sans-serif}
+.hdr{text-align:center;padding:40px 20px 20px;border-bottom:1px solid rgba(242,199,68,.1)}
+.hdr h1{font-family:'Archivo Black',sans-serif;font-size:28px;color:var(--fy);letter-spacing:3px;text-transform:uppercase}
+.hdr p{color:var(--t2);font-size:14px;margin-top:6px}
+.nav{display:flex;gap:8px;padding:20px;overflow-x:auto;justify-content:center;flex-wrap:wrap;max-width:900px;margin:0 auto}
+.nav button{background:var(--nc);color:var(--t1);border:1px solid rgba(242,199,68,.08);padding:8px 16px;border-radius:10px;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .15s}
+.nav button:hover{background:#3A2E28;border-color:rgba(242,199,68,.2)}
+.nav button.on{background:var(--fy);color:var(--sb);border-color:var(--fy)}
+.wrap{display:flex;justify-content:center;padding:30px 20px 60px}
+.phone{width:375px;min-height:740px;background:var(--nw);border-radius:40px;padding:12px;box-shadow:0 0 0 2px rgba(242,199,68,.08),0 20px 60px rgba(0,0,0,.5)}
+.inner{background:var(--nw);border-radius:30px;overflow-y:auto;overflow-x:hidden;min-height:716px;max-height:716px;position:relative}
+.notch{width:130px;height:30px;background:var(--nd);border-radius:0 0 18px 18px;margin:0 auto;position:sticky;top:0;z-index:10}
+.sbar{display:flex;justify-content:space-between;padding:4px 24px 0;font-size:11px;color:var(--t2);position:sticky;top:0;z-index:10;margin-top:-24px}
+.s{display:none}.s.on{display:block}
+/* shared */
+.al{font-family:'Archivo Black',sans-serif;color:var(--fy);font-size:18px;letter-spacing:2px;text-transform:uppercase;text-align:center;padding:16px 20px 12px}
+.card{background:var(--nc);border-radius:14px;margin:0 16px 10px;padding:16px;border:1px solid rgba(255,248,231,.04)}
+.btn{display:block;width:calc(100% - 32px);margin:12px 16px;background:var(--fy);color:var(--sb);border:none;padding:14px;border-radius:14px;font-family:'Archivo Black',sans-serif;font-size:15px;text-align:center;box-shadow:0 4px 0 var(--kg);text-transform:uppercase;letter-spacing:1px;cursor:pointer}
+.btn2{display:block;width:calc(100% - 32px);margin:8px 16px;background:transparent;color:var(--fy);border:2px solid rgba(242,199,68,.3);padding:12px;border-radius:14px;font-weight:700;font-size:14px;text-align:center;cursor:pointer}
+.inp{width:100%;background:var(--nd);border:1.5px solid rgba(242,199,68,.12);border-radius:12px;padding:13px 16px;color:var(--vw);font-family:'Outfit',sans-serif;font-size:14px;margin-bottom:10px;outline:0}
+.inp::placeholder{color:var(--t2)}
+.tag{display:inline-block;background:rgba(242,199,68,.12);color:var(--fy);font-size:11px;font-weight:600;padding:4px 10px;border-radius:8px;margin:2px 3px 2px 0}
+.av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.rb{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,248,231,.04)}.rb:last-child{border-bottom:0}
+.rbl{font-size:13px;font-weight:600;color:var(--t1);display:flex;align-items:center;gap:6px}
+.rbs{font-weight:700;font-size:14px;color:var(--fy)}
+.chip{display:inline-block;background:var(--nc);border:1.5px solid rgba(242,199,68,.08);color:var(--t1);padding:8px 14px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;margin:3px}
+.chip.on{background:rgba(242,199,68,.12);border-color:var(--fy);color:var(--fy)}
+.si{text-align:center;background:var(--nc);border:1.5px solid rgba(242,199,68,.06);border-radius:12px;padding:14px 6px 10px;cursor:pointer;font-size:12px;font-weight:600;color:var(--t1)}
+.si.on{border-color:var(--fy);background:rgba(242,199,68,.08);color:var(--fy)}
+.si em{display:block;font-size:28px;margin-bottom:6px;font-style:normal}
+.bottomnav{position:sticky;bottom:0;display:flex;justify-content:space-around;padding:12px 0 20px;background:var(--nd);border-top:1px solid rgba(255,248,231,.06)}
+.bni{text-align:center;font-size:10px;font-weight:500;color:var(--t2)}.bni.on{color:var(--fy)}.bni em{display:block;font-size:20px;margin-bottom:2px;font-style:normal}
+.sub{font-size:12px;color:var(--t2);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:6px}
+.fo{display:flex;align-items:center;gap:12px;background:var(--nc);border:1.5px solid rgba(242,199,68,.08);border-radius:12px;padding:12px 14px;margin:0 16px 8px;cursor:pointer}
+.fo.on{border-color:var(--fy);background:rgba(242,199,68,.06)}
+.foc{width:22px;height:22px;border-radius:50%;border:2px solid var(--t3);flex-shrink:0}.fo.on .foc{background:var(--fy);border-color:var(--fy)}
+.nfi{display:flex;gap:12px;padding:14px 20px;border-bottom:1px solid rgba(255,248,231,.04);align-items:flex-start}
+.nfi.ur{background:rgba(242,199,68,.03)}
+.nico{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.ndot{width:8px;height:8px;border-radius:50%;background:var(--fy);flex-shrink:0;margin-top:6px}
+.toast{margin:12px 16px;background:var(--nc);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;border:1px solid rgba(242,199,68,.12);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.eml{background:var(--vw);border-radius:14px;margin:12px 16px;overflow:hidden}
+.emhd{background:var(--nd);padding:16px;text-align:center}
+.emlo{font-family:'Archivo Black',sans-serif;font-size:20px;color:var(--fy);letter-spacing:2px;text-transform:uppercase}
+.embd{padding:20px 18px;color:var(--sb)}
+.emtx{font-size:13px;line-height:1.6;color:#6B5344;margin-bottom:12px}
+.embtn{display:block;background:var(--fy);color:var(--sb);text-align:center;padding:12px;border-radius:10px;font-weight:700;font-size:14px;margin:16px 0}
+.emft{text-align:center;padding:14px;background:#FFF3E0;font-size:11px;color:#8B6F5E;font-style:italic}
+.pc{background:var(--nc);border:1.5px solid rgba(242,199,68,.08);border-radius:14px;margin:0 16px 10px;padding:16px;position:relative}
+.pc.top{border-color:var(--fy)}
+.pcbadge{position:absolute;top:-10px;right:16px;background:var(--fy);color:var(--sb);font-size:10px;font-weight:700;padding:3px 10px;border-radius:6px;text-transform:uppercase;letter-spacing:.5px}
+.feat{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t1);padding:4px 0}
+::-webkit-scrollbar{width:0;height:0}
+</style>
+</head>
+<body>
+<div class="hdr"><h1>FRITURISME</h1><p>UI Showcase &middot; 12 schermen</p></div>
+<div class="nav" id="nav"></div>
+<div class="wrap"><div class="phone"><div class="inner" id="inner">
+<div class="notch"></div><div class="sbar"><span>21:37</span><span>📶 🔋</span></div>
+
+<!-- ===== LOGIN ===== -->
+<div class="s on" data-id="login" data-label="Login">
+<div style="text-align:center;padding:50px 30px 30px">
+<div style="font-size:48px;margin-bottom:12px">🍟</div>
+<div style="font-family:'Archivo Black',sans-serif;font-size:36px;color:var(--fy);letter-spacing:2px;text-transform:uppercase;text-shadow:2px 2px 0 var(--fo)">FRITURISME</div>
+<div style="font-family:'DM Serif Text',serif;font-style:italic;font-size:16px;color:var(--kg);margin-top:8px;line-height:1.4">Ge kent uw frituur.<br>Maar kent ge alle frituren?</div>
+</div>
+<div style="padding:20px 20px 0">
+<div style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:13px;border-radius:12px;font-weight:600;font-size:14px;border:none;background:var(--vw);color:var(--sb);margin-bottom:10px">🔵 Verder met Google</div>
+<div style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:13px;border-radius:12px;font-weight:600;font-size:14px;border:none;background:#fff;color:#1a1a1a;margin-bottom:10px">🍎 Verder met Apple</div>
+<div style="display:flex;align-items:center;gap:12px;padding:8px 0;color:var(--t2);font-size:12px"><span style="flex:1;height:1px;background:rgba(255,248,231,.1)"></span>of met e-mail<span style="flex:1;height:1px;background:rgba(255,248,231,.1)"></span></div>
+<input class="inp" placeholder="uw.email@voorbeeld.be">
+<input class="inp" type="password" placeholder="wachtwoord">
+</div>
+<div class="btn" style="margin-top:16px">Inloggen</div>
+<div style="text-align:center;padding:16px;font-size:12px;color:var(--t2)">Nog geen account? <span style="color:var(--fy);font-weight:600">Maak er eentje</span></div>
+<div style="text-align:center;font-size:11px;color:var(--t2);padding:0 40px;line-height:1.5">Door verder te gaan accepteer je dat friet superieur is aan patat.</div>
+</div>
+
+<!-- ===== ONBOARDING ===== -->
+<div class="s" data-id="onboard" data-label="Onboarding">
+<div style="font-size:64px;text-align:center;margin:30px 0 16px">🍟</div>
+<div style="font-family:'Archivo Black',sans-serif;font-size:22px;color:var(--vw);text-align:center;padding:0 24px;text-transform:uppercase;letter-spacing:1px">Welkom bij Friturisme</div>
+<div style="font-size:15px;color:var(--t1);text-align:center;padding:10px 30px 20px;line-height:1.5">Voor we beginnen: wat zijn uw favoriete snacks? Dan weten we meteen wat voor vlees we in de kuip hebben. Of ja, in de frituurpan.</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px;padding:0 20px;justify-content:center">
+<span class="chip on">🍔 Bicky</span><span class="chip">🌭 Frikandel</span><span class="chip on">🥩 Viandel</span><span class="chip">🦐 Garnaalkroket</span><span class="chip on">🥘 Stoofvlees</span><span class="chip">🧀 Kaaskroket</span><span class="chip">🌯 Loempia</span><span class="chip">🍗 Kipnuggets</span><span class="chip">🥚 Eierkroket</span><span class="chip on">🥙 Mitraillette</span><span class="chip">🔥 Mexicano</span><span class="chip">🧅 Gehaktbal</span>
+</div>
+<div class="btn" style="margin-top:20px">Dat is mij 🍟</div>
+<div style="display:flex;justify-content:center;gap:8px;padding:20px"><span style="width:8px;height:8px;border-radius:50%;background:var(--t3)"></span><span style="width:24px;height:8px;border-radius:4px;background:var(--fy)"></span><span style="width:8px;height:8px;border-radius:50%;background:var(--t3)"></span></div>
+</div>
+
+<!-- ===== HOME ===== -->
+<div class="s" data-id="home" data-label="Home">
+<div class="al">FRITURISME</div>
+<div style="font-size:11px;color:var(--t2);text-align:center;margin-top:-8px;letter-spacing:.5px">📍 Gent &middot; vrijdagavond</div>
+<div style="padding:16px 20px 4px"><div style="font-size:14px;color:var(--t1)">Goeienavond,</div><div style="font-family:'Archivo Black',sans-serif;font-size:22px;color:var(--vw);text-transform:uppercase">Thomas 👋</div></div>
+<div class="btn">🍟 CHECK IN</div>
+<div style="display:flex;justify-content:space-between;padding:16px 20px 10px"><span style="font-weight:700;font-size:14px">🔥 Trending deze week</span><span style="font-size:12px;color:var(--fy);font-weight:600">Meer →</span></div>
+<div style="display:flex;gap:10px;padding:0 16px;overflow-x:auto">
+<div style="background:var(--nc);border-radius:12px;padding:12px 16px;min-width:130px;border:1px solid rgba(255,248,231,.04);flex-shrink:0"><div style="font-size:24px;margin-bottom:4px">🔴</div><div style="font-weight:700;font-size:13px">Roodkapje</div><div style="font-size:11px;color:var(--t2);margin-top:2px">+340% 📈</div></div>
+<div style="background:var(--nc);border-radius:12px;padding:12px 16px;min-width:130px;border:1px solid rgba(255,248,231,.04);flex-shrink:0"><div style="font-size:24px;margin-bottom:4px">🌯</div><div style="font-weight:700;font-size:13px">Loempidel</div><div style="font-size:11px;color:var(--t2);margin-top:2px">+85% 📈</div></div>
+<div style="background:var(--nc);border-radius:12px;padding:12px 16px;min-width:130px;border:1px solid rgba(255,248,231,.04);flex-shrink:0"><div style="font-size:24px;margin-bottom:4px">🍔</div><div style="font-weight:700;font-size:13px">Bicky Wrap</div><div style="font-size:11px;color:var(--t2);margin-top:2px">+62% 📈</div></div>
+</div>
+<div style="display:flex;justify-content:space-between;padding:16px 20px 10px"><span style="font-weight:700;font-size:14px">Recente check-ins</span><span style="font-size:12px;color:var(--fy);font-weight:600">Alles →</span></div>
+<div class="card"><div style="display:flex;gap:12px"><div class="av" style="background:var(--fo)">S</div><div style="flex:1"><div style="font-weight:700;font-size:14px">Sarah</div><div style="font-size:12px;color:var(--t2)">📍 Frituur Stefano's, Gent</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:8px"><span class="tag">🍟 Grote friet</span><span class="tag">🥘 Julientje</span></div><div style="font-size:13px;color:var(--t1);margin-top:6px;font-style:italic">"Eerste keer een Julientje. Waar is dit mijn hele leven geweest?"</div><div style="font-size:11px;color:var(--t2);margin-top:6px">18 min geleden</div></div></div></div>
+<div class="card"><div style="display:flex;gap:12px"><div class="av" style="background:var(--fg)">K</div><div style="flex:1"><div style="font-weight:700;font-size:14px">Koen</div><div style="font-size:12px;color:var(--t2)">📍 't Frietkotje, Ledeberg</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:8px"><span class="tag">🍟 Grote friet</span><span class="tag">🍔 Bicky</span><span class="tag">🥫 Joppie</span></div><div style="font-size:11px;color:var(--t2);margin-top:6px">43 min geleden</div></div></div></div>
+<div style="height:60px"></div>
+<div class="bottomnav"><div class="bni on"><em>🏠</em>Home</div><div class="bni"><em>🗺️</em>Kaart</div><div class="bni"><em>🔥</em>Ontdek</div><div class="bni"><em>👤</em>Profiel</div></div>
+</div>
+
+<!-- ===== CHECK-IN 1: WAAR ===== -->
+<div class="s" data-id="ci1" data-label="Check-in: waar?">
+<div class="al">CHECK IN</div>
+<div style="text-align:center;padding:0 24px"><div class="sub">Stap 1 van 3</div><div style="font-family:'Archivo Black',sans-serif;font-size:18px;color:var(--vw);text-transform:uppercase">Waar zit ge?</div><div style="font-size:13px;color:var(--t1);margin-top:6px;line-height:1.4">We zien een paar frituren in uw buurt. Of zoek zelf.</div></div>
+<div style="padding:12px 16px 6px"><input class="inp" placeholder="🔍 Zoek een frituur..."></div>
+<div style="padding:0 20px 8px" class="sub">📍 In uw buurt</div>
+<div class="fo on"><div style="font-size:24px">📍</div><div style="flex:1"><div style="font-weight:700;font-size:14px">Frituur Stefano's</div><div style="font-size:11px;color:var(--t2)">120m &middot; Sleepstraat, Gent</div></div><div class="foc"></div></div>
+<div class="fo"><div style="font-size:24px">📍</div><div style="flex:1"><div style="font-weight:700;font-size:14px">Frituur 't Pleintje</div><div style="font-size:11px;color:var(--t2)">340m &middot; Sint-Pietersnieuwstraat</div></div><div class="foc"></div></div>
+<div class="fo"><div style="font-size:24px">📍</div><div style="flex:1"><div style="font-weight:700;font-size:14px">Frietkot De Gouden Saté</div><div style="font-size:11px;color:var(--t2)">580m &middot; Groentenmarkt</div></div><div class="foc"></div></div>
+<div class="fo"><div style="font-size:24px">📍</div><div style="flex:1"><div style="font-weight:700;font-size:14px">Frituur Bij Filansen</div><div style="font-size:11px;color:var(--t2)">750m &middot; Overpoort</div></div><div class="foc"></div></div>
+<div class="btn">Volgende →</div>
+</div>
+
+<!-- ===== CHECK-IN 2: WAT ===== -->
+<div class="s" data-id="ci2" data-label="Check-in: wat?">
+<div class="al">CHECK IN</div>
+<div style="text-align:center;padding:0 24px"><div class="sub">Stap 2 van 3</div><div style="font-family:'Archivo Black',sans-serif;font-size:18px;color:var(--vw);text-transform:uppercase">Wat eet ge?</div><div style="font-size:13px;color:var(--t1);margin-top:6px">Selecteer alles wat in uw bakje zit. Geen oordeel.</div></div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px 16px">
+<div class="si on"><em>🍟</em>Friet</div><div class="si on"><em>🍔</em>Bicky</div><div class="si"><em>🌭</em>Frikandel</div><div class="si"><em>🥩</em>Viandel</div><div class="si on"><em>🥘</em>Stoofvlees</div><div class="si"><em>🦐</em>Garnaal</div><div class="si"><em>🧀</em>Kaaskroket</div><div class="si"><em>🌯</em>Loempia</div><div class="si"><em>🔥</em>Mexicano</div><div class="si"><em>🥙</em>Mitraillette</div><div class="si"><em>🍗</em>Nuggets</div><div class="si"><em>➕</em>Andere</div>
+</div>
+<div style="padding:8px 20px 0;font-size:12px;color:var(--t2)">Sauzen?</div>
+<div style="display:flex;flex-wrap:wrap;gap:6px;padding:6px 16px">
+<span class="chip on">Mayo</span><span class="chip">Ketchup</span><span class="chip on">Stoofvlees</span><span class="chip">Andalouse</span><span class="chip">Joppie</span><span class="chip">Tartaar</span><span class="chip">Samoerai</span><span class="chip">Curry</span>
+</div>
+<div class="btn" style="margin-top:12px">Volgende →</div>
+</div>
+
+<!-- ===== CHECK-IN 3: SCORE ===== -->
+<div class="s" data-id="ci3" data-label="Check-in: score">
+<div class="al">CHECK IN</div>
+<div style="text-align:center;padding:0 24px"><div class="sub">Stap 3 van 3</div><div style="font-family:'Archivo Black',sans-serif;font-size:18px;color:var(--vw);text-transform:uppercase">Hoe was 't?</div><div style="font-size:13px;color:var(--t1);margin-top:6px">Helemaal optioneel. Score wat ge wilt, skip wat ge wilt.</div></div>
+<div class="card"><div class="sub">Over de frituur</div>
+<div class="rb"><div class="rbl">🏠 Friturisme</div><div class="rbs" style="color:var(--fy)">★★★★★</div></div>
+<div class="rb"><div class="rbl">😊 Service</div><div class="rbs" style="color:var(--fy)">★★★★☆</div></div>
+<div class="rb"><div class="rbl">💰 Prijs-kwaliteit</div><div class="rbs" style="color:var(--fy)">★★★★☆</div></div></div>
+<div class="card"><div class="sub">Over uw bestelling</div>
+<div class="rb"><div class="rbl">🍟 Friet</div><div class="rbs" style="color:var(--fy)">★★★★★</div></div>
+<div class="rb"><div class="rbl">🍔 Bicky</div><div class="rbs" style="color:var(--fy)">★★★★★</div></div>
+<div class="rb"><div class="rbl">🥫 Sauzen</div><div class="rbs" style="color:var(--fy)">★★★★☆</div></div></div>
+<div class="card"><div style="font-size:12px;color:var(--t2);margin-bottom:8px">Nog iets kwijt? (optioneel)</div><input class="inp" placeholder="Bicky was on point, stoofvlees next level." style="margin-bottom:0"></div>
+<div style="text-align:center;padding:6px 0"><span style="font-size:12px;color:var(--t2);cursor:pointer">📸 Foto toevoegen</span></div>
+<div class="btn">🍟 Posten</div>
+</div>
+
+<!-- ===== CHECK-IN DONE ===== -->
+<div class="s" data-id="done" data-label="Check-in done ✓">
+<div style="text-align:center;padding:60px 30px 20px">
+<div style="font-size:72px;margin-bottom:16px">🎉</div>
+<div style="font-family:'Archivo Black',sans-serif;font-size:22px;color:var(--fy);text-transform:uppercase">Ingecheckt!</div>
+<div style="font-size:14px;color:var(--t1);margin-top:8px;line-height:1.5">Frituur Stefano's, check.<br>Dat zijn al 12 check-ins. Ge begint er serieus werk van te maken.</div>
+<div style="display:inline-flex;align-items:center;gap:6px;background:var(--nc);border:1px solid rgba(242,199,68,.15);border-radius:12px;padding:10px 18px;margin-top:20px;font-size:13px;font-weight:600;color:var(--fy);cursor:pointer">📸 Deel op Instagram</div>
+</div>
+<div class="card" style="background:var(--nd);text-align:center;padding:20px">
+<div style="font-family:'Archivo Black',sans-serif;font-size:12px;color:var(--fy);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">FRITURISME</div>
+<div style="font-size:13px;color:var(--t1)">Thomas at bij</div>
+<div style="font-family:'Archivo Black',sans-serif;font-size:16px;margin:4px 0;text-transform:uppercase">Frituur Stefano's</div>
+<div style="display:flex;gap:6px;justify-content:center;margin:10px 0"><span class="tag">🍟 Friet</span><span class="tag">🍔 Bicky</span><span class="tag">🥘 Stoofvlees</span></div>
+<div style="font-size:24px;margin-top:6px">⭐⭐⭐⭐⭐</div>
+<div style="font-size:11px;color:var(--t2);margin-top:8px">friturisme.be</div></div>
+<div style="text-align:center;padding:8px;font-size:11px;color:var(--t2)">↑ Preview van uw deelbare kaartje</div>
+<div class="btn2">Terug naar home</div>
+</div>
+
+<!-- ===== FRITUUR PAGE ===== -->
+<div class="s" data-id="frituur" data-label="Frituurpagina">
+<div style="padding:8px 16px;font-size:13px;color:var(--t2);cursor:pointer">← Terug</div>
+<div style="text-align:center;padding:16px 20px;background:linear-gradient(180deg,rgba(242,199,68,.08) 0%,transparent 100%)">
+<div style="font-size:40px;margin-bottom:8px">🏠</div>
+<div style="font-family:'Archivo Black',sans-serif;font-size:22px;text-transform:uppercase;letter-spacing:1px">Frituur Stefano's</div>
+<div style="font-size:13px;color:var(--t1);margin-top:4px">📍 Sleepstraat 82, Gent</div>
+<div style="display:inline-flex;align-items:center;gap:4px;background:rgba(45,107,74,.2);color:#6FCF97;font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px;margin-top:10px">✓ Geverifieerd</div>
+<div style="display:flex;justify-content:center;gap:24px;margin-top:14px">
+<div style="text-align:center"><div style="font-family:'Archivo Black',sans-serif;font-size:20px;color:var(--fy)">4.7</div><div style="font-size:10px;color:var(--t2);text-transform:uppercase">Score</div></div>
+<div style="text-align:center"><div style="font-family:'Archivo Black',sans-serif;font-size:20px;color:var(--fy)">128</div><div style="font-size:10px;color:var(--t2);text-transform:uppercase">Check-ins</div></div>
+<div style="text-align:center"><div style="font-family:'Archivo Black',sans-serif;font-size:20px;color:var(--fy)">47</div><div style="font-size:10px;color:var(--t2);text-transform:uppercase">Reviews</div></div>
+</div></div>
+<div class="btn">🍟 CHECK IN</div>
+<div class="card"><div class="sub">Scores</div>
+<div class="rb"><div class="rbl">🏠 Friturisme</div><div class="rbs">4.9</div></div>
+<div class="rb"><div class="rbl">🍟 Friet</div><div class="rbs">4.5</div></div>
+<div class="rb"><div class="rbl">🍔 Bicky</div><div class="rbs">4.8</div></div>
+<div class="rb"><div class="rbl">🥩 Snacks</div><div class="rbs">4.3</div></div>
+<div class="rb"><div class="rbl">🥫 Sauzen</div><div class="rbs">4.7</div></div>
+<div class="rb"><div class="rbl">😊 Service</div><div class="rbs">4.9</div></div></div>
+<div style="display:flex;margin:0 16px;border-bottom:2px solid rgba(255,248,231,.06)">
+<div style="flex:1;text-align:center;padding:10px;font-size:13px;font-weight:600;color:var(--fy);border-bottom:2px solid var(--fy);margin-bottom:-2px">Check-ins</div>
+<div style="flex:1;text-align:center;padding:10px;font-size:13px;font-weight:600;color:var(--t2)">Menu</div>
+<div style="flex:1;text-align:center;padding:10px;font-size:13px;font-weight:600;color:var(--t2)">Info</div></div>
+<div class="card" style="margin-top:12px"><div style="display:flex;gap:12px"><div class="av" style="background:var(--fo)">S</div><div style="flex:1"><div style="font-weight:700;font-size:14px">Sarah</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px"><span class="tag">🍟 Friet</span><span class="tag">🥘 Julientje</span></div><div style="font-size:13px;color:var(--t1);margin-top:6px;font-style:italic">"Eerste keer een Julientje. Waar is dit mijn hele leven geweest?"</div><div style="font-size:11px;color:var(--t2);margin-top:6px">18 min geleden</div></div></div></div>
+<div class="card"><div style="display:flex;gap:12px"><div class="av" style="background:var(--fg)">M</div><div style="flex:1"><div style="font-weight:700;font-size:14px">Mehdi</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px"><span class="tag">🍟 Grote friet</span><span class="tag">🍔 Bicky</span><span class="tag">🍔 Bicky</span></div><div style="font-size:13px;color:var(--t1);margin-top:6px;font-style:italic">"Twee bicky's besteld. Geen spijt."</div><div style="font-size:11px;color:var(--t2);margin-top:6px">1 uur geleden</div></div></div></div>
+<div style="height:60px"></div>
+<div class="bottomnav"><div class="bni"><em>🏠</em>Home</div><div class="bni"><em>🗺️</em>Kaart</div><div class="bni"><em>🔥</em>Ontdek</div><div class="bni"><em>👤</em>Profiel</div></div>
+</div>
+
+<!-- ===== PROFILE ===== -->
+<div class="s" data-id="profiel" data-label="Profiel">
+<div style="text-align:center;padding:24px 20px 16px;background:linear-gradient(180deg,rgba(232,116,42,.08) 0%,transparent 100%)">
+<div style="width:72px;height:72px;border-radius:50%;background:var(--fo);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:28px;color:#fff;border:3px solid var(--fy)">T</div>
+<div style="font-family:'Archivo Black',sans-serif;font-size:20px;text-transform:uppercase">Thomas</div>
+<div style="font-size:12px;color:var(--t2);margin-top:2px">Friturismeur sinds feb 2026</div>
+<div style="display:flex;justify-content:center;gap:12px;margin-top:16px">
+<div style="text-align:center;background:var(--nc);border-radius:12px;padding:10px 16px;min-width:75px"><div style="font-family:'Archivo Black',sans-serif;font-size:18px;color:var(--fy)">12</div><div style="font-size:10px;color:var(--t2);text-transform:uppercase">Check-ins</div></div>
+<div style="text-align:center;background:var(--nc);border-radius:12px;padding:10px 16px;min-width:75px"><div style="font-family:'Archivo Black',sans-serif;font-size:18px;color:var(--fy)">8</div><div style="font-size:10px;color:var(--t2);text-transform:uppercase">Frituren</div></div>
+<div style="text-align:center;background:var(--nc);border-radius:12px;padding:10px 16px;min-width:75px"><div style="font-family:'Archivo Black',sans-serif;font-size:18px;color:var(--fy)">23</div><div style="font-size:10px;color:var(--t2);text-transform:uppercase">Snacks</div></div>
+</div></div>
+<div style="height:12px"></div>
+<div style="margin:0 16px;background:rgba(242,199,68,.06);border:1px solid rgba(242,199,68,.1);border-radius:14px;padding:14px 16px;text-align:center">
+<div style="font-size:11px;color:var(--t2);text-transform:uppercase;letter-spacing:1px">Uw reviewer-type</div>
+<div style="font-family:'DM Serif Text',serif;font-style:italic;font-size:18px;color:var(--fy);margin-top:4px">"De Bicky Connaisseur"</div>
+<div style="font-size:12px;color:var(--t1);margin-top:4px">Gem. score: 4.2 &middot; Kritisch maar eerlijk</div>
+</div>
+<div style="height:12px"></div>
+<div class="card"><div class="sub">Top snacks</div>
+<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,248,231,.04)"><span style="font-size:22px">🍔</span><span style="font-weight:600;font-size:14px;flex:1">Bicky Burger</span><span style="font-weight:700;font-size:13px;color:var(--fy)">4.6 ★</span></div>
+<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,248,231,.04)"><span style="font-size:22px">🥘</span><span style="font-weight:600;font-size:14px;flex:1">Stoofvlees</span><span style="font-weight:700;font-size:13px;color:var(--fy)">4.4 ★</span></div>
+<div style="display:flex;align-items:center;gap:10px;padding:10px 0"><span style="font-size:22px">🍟</span><span style="font-weight:600;font-size:14px;flex:1">Grote friet</span><span style="font-weight:700;font-size:13px;color:var(--fy)">4.3 ★</span></div></div>
+<div class="card"><div class="sub">Favoriete frituren</div>
+<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,248,231,.04)"><span style="font-size:22px">📍</span><span style="font-weight:600;font-size:14px;flex:1">Frituur Stefano's</span><span style="font-weight:700;font-size:13px;color:var(--fy)">4.7 ★</span></div>
+<div style="display:flex;align-items:center;gap:10px;padding:10px 0"><span style="font-size:22px">📍</span><span style="font-weight:600;font-size:14px;flex:1">'t Pleintje</span><span style="font-weight:700;font-size:13px;color:var(--fy)">4.2 ★</span></div></div>
+<div style="height:60px"></div>
+<div class="bottomnav"><div class="bni"><em>🏠</em>Home</div><div class="bni"><em>🗺️</em>Kaart</div><div class="bni"><em>🔥</em>Ontdek</div><div class="bni on"><em>👤</em>Profiel</div></div>
+</div>
+
+<!-- ===== CLAIM (B2B) ===== -->
+<div class="s" data-id="claim" data-label="Claim (B2B)">
+<div style="text-align:center;padding:24px 24px 12px;background:linear-gradient(180deg,rgba(242,199,68,.06) 0%,transparent 100%)">
+<div style="font-size:40px;margin-bottom:8px">🏠</div>
+<div style="font-size:12px;color:var(--t2);text-transform:uppercase;letter-spacing:1px">Claim uw frituur</div>
+<div style="font-family:'Archivo Black',sans-serif;font-size:20px;text-transform:uppercase;margin-top:4px">Frituur Stefano's</div>
+<div style="font-size:13px;color:var(--t1);margin-top:8px;line-height:1.5;padding:0 10px">Er staan al 47 reviews over uw zaak. Wilt ge meelezen, reageren, en weten wat uw klanten bestellen?</div>
+</div>
+<div style="height:12px"></div>
+<div class="pc">
+<div style="display:flex;justify-content:space-between;align-items:center"><div style="font-family:'Archivo Black',sans-serif;font-size:16px;text-transform:uppercase">Gratis</div><div style="font-family:'Archivo Black',sans-serif;font-size:20px;color:var(--fy)">&euro;0</div></div>
+<div style="margin-top:10px">
+<div class="feat"><span style="color:#6FCF97">✓</span> Profiel claimen</div>
+<div class="feat"><span style="color:#6FCF97">✓</span> Openingsuren aanpassen</div>
+<div class="feat"><span style="color:#6FCF97">✓</span> 3 foto's toevoegen</div>
+<div class="feat"><span style="color:var(--t2)">✗</span> Reageren op reviews</div>
+<div class="feat"><span style="color:var(--t2)">✗</span> Analytics en inzichten</div>
+</div></div>
+<div class="pc top">
+<div class="pcbadge">Aanbevolen</div>
+<div style="display:flex;justify-content:space-between;align-items:center"><div style="font-family:'Archivo Black',sans-serif;font-size:16px;text-transform:uppercase">Premium</div><div style="text-align:right"><span style="font-family:'Archivo Black',sans-serif;font-size:20px;color:var(--fy)">&euro;29</span><span style="font-size:11px;color:var(--t2)">/maand</span></div></div>
+<div style="margin-top:10px">
+<div class="feat"><span style="color:#6FCF97">✓</span> Alles van gratis</div>
+<div class="feat"><span style="color:#6FCF97">✓</span> Reageren op reviews</div>
+<div class="feat"><span style="color:#6FCF97">✓</span> Uitgebreide analytics</div>
+<div class="feat"><span style="color:#6FCF97">✓</span> Menu met prijzen</div>
+<div class="feat"><span style="color:#6FCF97">✓</span> Acties posten</div>
+<div class="feat"><span style="color:#6FCF97">✓</span> Geverifieerde badge ✓</div>
+<div class="feat"><span style="color:#6FCF97">✓</span> Boost in zoekresultaten</div>
+</div></div>
+<div style="text-align:center;font-size:12px;color:var(--t2);padding:4px 20px;line-height:1.5">Eerste maand gratis. Opzeggen wanneer ge wilt.<br>Kost minder dan drie pakken friet.</div>
+<div class="btn">Start met Premium</div>
+<div class="btn2">Eerst gratis claimen</div>
+</div>
+
+<!-- ===== MELDINGEN ===== -->
+<div class="s" data-id="notif" data-label="Meldingen">
+<div class="al">MELDINGEN</div>
+
+<div class="toast"><div style="font-size:28px;flex-shrink:0">🍟</div><div style="font-size:13px;color:var(--t1);line-height:1.4"><strong style="color:var(--vw)">Het is vrijdag.</strong><br>Ge weet wat dat betekent.</div></div>
+
+<div class="nfi ur">
+<div class="nico" style="background:rgba(242,199,68,.1)">⭐</div>
+<div style="flex:1"><div style="font-size:13px;color:var(--t1);line-height:1.4"><strong style="color:var(--vw)">Sarah</strong> heeft ook ingecheckt bij Frituur Stefano's. Zij geeft de bicky een 5.</div><div style="font-size:11px;color:var(--t2);margin-top:4px">2 min geleden</div></div>
+<div class="ndot"></div></div>
+
+<div class="nfi ur">
+<div class="nico" style="background:rgba(232,116,42,.1)">🔥</div>
+<div style="flex:1"><div style="font-size:13px;color:var(--t1);line-height:1.4"><strong style="color:var(--vw)">Trending:</strong> Het Roodkapje is deze week ontploft in Oost-Vlaanderen. Al geprobeerd?</div><div style="font-size:11px;color:var(--t2);margin-top:4px">1 uur geleden</div></div>
+<div class="ndot"></div></div>
+
+<div class="nfi">
+<div class="nico" style="background:rgba(45,107,74,.1)">🏠</div>
+<div style="flex:1"><div style="font-size:13px;color:var(--t1);line-height:1.4"><strong style="color:var(--vw)">Frituur 't Pleintje</strong> heeft hun profiel geclaimed. Ze hebben het menu toegevoegd.</div><div style="font-size:11px;color:var(--t2);margin-top:4px">3 uur geleden</div></div></div>
+
+<div class="nfi">
+<div class="nico" style="background:rgba(196,52,45,.1)">🍔</div>
+<div style="flex:1"><div style="font-size:13px;color:var(--t1);line-height:1.4">Ge hebt deze maand <strong style="color:var(--vw)">6 bicky's</strong> gereviewd. Obsessie of passie? Wij oordelen niet.</div><div style="font-size:11px;color:var(--t2);margin-top:4px">gisteren</div></div></div>
+
+<div class="nfi">
+<div class="nico" style="background:rgba(212,149,43,.1)">📍</div>
+<div style="flex:1"><div style="font-size:13px;color:var(--t1);line-height:1.4"><strong style="color:var(--vw)">Nieuwe frituur</strong> in uw buurt: Frietmolen is geopend op de Korenmarkt. Verkennen?</div><div style="font-size:11px;color:var(--t2);margin-top:4px">2 dagen geleden</div></div></div>
+
+<div class="nfi">
+<div class="nico" style="background:rgba(242,199,68,.1)">🏆</div>
+<div style="flex:1"><div style="font-size:13px;color:var(--t1);line-height:1.4">Ge zijt gestegen naar <strong style="color:var(--vw)">de top 10%</strong> van actiefste Friturismeurs in Gent. Respect.</div><div style="font-size:11px;color:var(--t2);margin-top:4px">3 dagen geleden</div></div></div>
+
+<div class="nfi">
+<div class="nico" style="background:rgba(196,52,45,.1)">💬</div>
+<div style="flex:1"><div style="font-size:13px;color:var(--t1);line-height:1.4"><strong style="color:var(--vw)">Frituur Stefano's</strong> heeft gereageerd op uw review: "Bedankt Thomas! Volgende keer stoofvlees van het huis 😉"</div><div style="font-size:11px;color:var(--t2);margin-top:4px">4 dagen geleden</div></div></div>
+
+<div style="text-align:center;padding:20px;font-size:13px;color:var(--t2)">Da was het. Ga friet eten ofzo.</div>
+
+<div style="height:60px"></div>
+<div class="bottomnav"><div class="bni"><em>🏠</em>Home</div><div class="bni"><em>🗺️</em>Kaart</div><div class="bni"><em>🔥</em>Ontdek</div><div class="bni"><em>👤</em>Profiel</div></div>
+</div>
+
+<!-- ===== E-MAILS ===== -->
+<div class="s" data-id="emails" data-label="E-mails">
+<div class="al" style="font-size:14px">E-MAIL TEMPLATES</div>
+
+<div style="padding:4px 20px 8px" class="sub">Welkom-mail</div>
+<div class="eml">
+<div class="emhd"><div class="emlo">FRITURISME</div></div>
+<div class="embd">
+<div style="font-weight:700;font-size:15px;color:var(--sb);margin-bottom:10px">Welkom Thomas! 🍟</div>
+<div class="emtx">Uw account is aangemaakt. Daarmee is het officieel: ge zijt een Friturismeur.</div>
+<div class="emtx">Friturisme werkt simpel: ga naar een frituur, check in, en zeg wat ge ervan vond. Ge kunt zo veel of zo weinig zeggen als ge wilt. Een score is leuk. Een woordje erbij is leuker. Een foto van uw bakje friet is het leukst.</div>
+<div class="embtn">Mijn eerste check-in doen</div>
+<div class="emtx" style="font-size:12px;text-align:center">Veel plezier. En vergeet de mayo niet.</div>
+</div>
+<div class="emft">Friturisme &middot; Ge kent uw frituur. Maar kent ge alle frituren?</div>
+</div>
+
+<div style="height:14px"></div>
+<div style="padding:4px 20px 8px" class="sub">Claim-mail (naar frituur)</div>
+<div class="eml">
+<div class="emhd"><div class="emlo">FRITURISME</div></div>
+<div class="embd">
+<div style="font-weight:700;font-size:15px;color:var(--sb);margin-bottom:10px">Dag Stefano,</div>
+<div class="emtx">Goed nieuws: mensen praten over uw frituur op Friturisme. Er staan al 47 reviews en 128 check-ins op uw pagina.</div>
+<div class="emtx">Wilt ge zien wat ze zeggen? Claim uw profiel en ge kunt meelezen, reageren, uw menu tonen, en zien welke snacks het populairst zijn.</div>
+<div class="emtx">Gratis te claimen. Duurt 2 minuten. Kost minder moeite dan een pak friet bakken.</div>
+<div class="embtn">Mijn frituur claimen</div>
+</div>
+<div class="emft">Friturisme &middot; De frituur-app voor Belgi&euml;</div>
+</div>
+
+<div style="height:14px"></div>
+<div style="padding:4px 20px 8px" class="sub">Vrijdag-reminder</div>
+<div class="eml">
+<div class="emhd"><div class="emlo">FRITURISME</div></div>
+<div class="embd">
+<div style="font-weight:700;font-size:15px;color:var(--sb);margin-bottom:10px">Thomas, het is vrijdag. 🍟</div>
+<div class="emtx">Ge weet wat dat betekent. Of toch niet? Hier zijn drie frituren in uw buurt die ge nog niet hebt bezocht:</div>
+<div style="background:#FFF3E0;border-radius:8px;padding:10px 12px;margin:8px 0">
+<div style="font-weight:700;font-size:13px;color:var(--sb)">📍 Frietkot De Gouden Sat&eacute;</div>
+<div style="font-size:12px;color:#6B5344">Groentenmarkt, Gent &middot; 4.5 ★ &middot; 34 check-ins</div>
+</div>
+<div style="background:#FFF3E0;border-radius:8px;padding:10px 12px;margin:8px 0">
+<div style="font-weight:700;font-size:13px;color:var(--sb)">📍 Frituur Bij Filansen</div>
+<div style="font-size:12px;color:#6B5344">Overpoort, Gent &middot; 4.1 ★ &middot; 22 check-ins</div>
+</div>
+<div style="background:#FFF3E0;border-radius:8px;padding:10px 12px;margin:8px 0">
+<div style="font-weight:700;font-size:13px;color:var(--sb)">📍 Frietuur 't Hoeksken</div>
+<div style="font-size:12px;color:#6B5344">Brugse Poort, Gent &middot; 4.6 ★ &middot; 19 check-ins</div>
+</div>
+<div class="embtn">Bekijk op de kaart</div>
+<div class="emtx" style="font-size:12px;text-align:center">Goeie vrijdag gewenst. Eet smakelijk.</div>
+</div>
+<div class="emft">Friturisme &middot; Ge kent uw frituur. Maar kent ge alle frituren?</div>
+</div>
+
+<div style="height:14px"></div>
+<div style="padding:4px 20px 8px" class="sub">Review-reactie melding</div>
+<div class="eml">
+<div class="emhd"><div class="emlo">FRITURISME</div></div>
+<div class="embd">
+<div style="font-weight:700;font-size:15px;color:var(--sb);margin-bottom:10px">Thomas, Stefano's heeft gereageerd! 💬</div>
+<div class="emtx">Uw review bij Frituur Stefano's heeft een reactie gekregen van de uitbater:</div>
+<div style="background:#FFF3E0;border-radius:8px;padding:12px;margin:8px 0">
+<div style="font-size:12px;color:#8B6F5E;margin-bottom:4px">Uw review:</div>
+<div style="font-size:13px;color:var(--sb);font-style:italic">"Bicky was on point, stoofvlees van een ander level."</div>
+<div style="height:1px;background:#E8D5C0;margin:8px 0"></div>
+<div style="font-size:12px;color:#8B6F5E;margin-bottom:4px">Reactie van Frituur Stefano's:</div>
+<div style="font-size:13px;color:var(--sb)">"Bedankt Thomas! Dat stoofvlees is het recept van mijn oma. Volgende keer een portie van het huis 😉"</div>
+</div>
+<div class="embtn">Bekijk de volledige review</div>
+</div>
+<div class="emft">Friturisme &middot; Ge kent uw frituur. Maar kent ge alle frituren?</div>
+</div>
+
+<div style="height:20px"></div>
+</div>
+
+<!-- ===== POPUPS ===== -->
+<div class="s" data-id="popups" data-label="Popups & toasts">
+<div class="al" style="font-size:14px">POPUPS & TOASTS</div>
+
+<div style="padding:8px 20px" class="sub">Vrijdag push notificatie</div>
+<div class="toast"><div style="font-size:28px;flex-shrink:0">🍟</div><div style="font-size:13px;color:var(--t1);line-height:1.4"><strong style="color:var(--vw)">Het is vrijdag.</strong><br>Ge weet wat dat betekent.</div></div>
+
+<div style="padding:16px 20px 8px" class="sub">Locatie-suggestie</div>
+<div class="toast"><div style="font-size:28px;flex-shrink:0">📍</div><div style="font-size:13px;color:var(--t1);line-height:1.4"><strong style="color:var(--vw)">Frituur Stefano's</strong> is op 120m. Toevallig in de buurt of met opzet? 😏</div></div>
+
+<div style="padding:16px 20px 8px" class="sub">Eerste check-in</div>
+<div class="toast"><div style="font-size:28px;flex-shrink:0">🎉</div><div style="font-size:13px;color:var(--t1);line-height:1.4"><strong style="color:var(--vw)">Uw eerste check-in!</strong><br>Het begin van een vettig avontuur.</div></div>
+
+<div style="padding:16px 20px 8px" class="sub">Streak</div>
+<div class="toast"><div style="font-size:28px;flex-shrink:0">🔥</div><div style="font-size:13px;color:var(--t1);line-height:1.4"><strong style="color:var(--vw)">3 vrijdagen op rij!</strong><br>Ge zijt een vaste waarde. Letterlijk.</div></div>
+
+<div style="padding:16px 20px 8px" class="sub">Nieuwe snack in de buurt</div>
+<div class="toast"><div style="font-size:28px;flex-shrink:0">🆕</div><div style="font-size:13px;color:var(--t1);line-height:1.4"><strong style="color:var(--vw)">Loempidel Dynamite</strong> is net gespot bij 3 frituren in Gent. Dapper genoeg?</div></div>
+
+<div style="padding:16px 20px 8px" class="sub">Error toast</div>
+<div class="toast" style="border-color:rgba(196,52,45,.2)"><div style="font-size:28px;flex-shrink:0">😬</div><div style="font-size:13px;color:var(--t1);line-height:1.4"><strong style="color:var(--vw)">Er is iets misgelopen.</strong><br>Waarschijnlijk het frituurvet. Probeer opnieuw.</div></div>
+
+<div style="padding:16px 20px 8px" class="sub">Geen resultaten</div>
+<div class="toast"><div style="font-size:28px;flex-shrink:0">🤷</div><div style="font-size:13px;color:var(--t1);line-height:1.4"><strong style="color:var(--vw)">Niks gevonden.</strong><br>Ofwel bestaat het niet, ofwel is het zo underground dat zelfs wij het niet kennen.</div></div>
+
+<div style="padding:16px 20px 8px" class="sub">GPS niet beschikbaar</div>
+<div class="toast"><div style="font-size:28px;flex-shrink:0">🗺️</div><div style="font-size:13px;color:var(--t1);line-height:1.4"><strong style="color:var(--vw)">We weten niet waar ge zijt.</strong><br>Zet uw locatie aan of zoek handmatig. Wij stalken niet, beloofd.</div></div>
+
+<div style="padding:16px 20px 8px" class="sub">Review geplaatst door frituur</div>
+<div class="card" style="border:1px solid rgba(242,199,68,.15)">
+<div style="display:flex;gap:10px;align-items:center;margin-bottom:10px">
+<div style="width:36px;height:36px;border-radius:10px;background:rgba(45,107,74,.15);display:flex;align-items:center;justify-content:center;font-size:16px">🏠</div>
+<div><div style="font-weight:700;font-size:13px">Frituur Stefano's</div><div style="font-size:11px;color:var(--t2)">Geverifieerde frituur</div></div>
+</div>
+<div style="font-size:13px;color:var(--t1);line-height:1.5;font-style:italic;padding:10px 12px;background:rgba(242,199,68,.04);border-radius:8px">"Bedankt Thomas! Dat stoofvlees is het recept van mijn oma. Volgende keer een portie van het huis 😉"</div>
+<div style="font-size:11px;color:var(--t2);margin-top:8px">Reactie op uw review &middot; 2 uur geleden</div>
+</div>
+
+<div style="height:20px"></div>
+</div>
+
+</div></div></div>
+
+<script>
+// Build nav from data attributes
+const screens = document.querySelectorAll('.s');
+const nav = document.getElementById('nav');
+screens.forEach((s, i) => {
+  const btn = document.createElement('button');
+  btn.textContent = s.dataset.label;
+  if(i === 0) btn.classList.add('on');
+  btn.onclick = () => {
+    document.querySelectorAll('.s').forEach(x => x.classList.remove('on'));
+    document.querySelectorAll('.nav button').forEach(x => x.classList.remove('on'));
+    s.classList.add('on');
+    btn.classList.add('on');
+    document.getElementById('inner').scrollTop = 0;
+  };
+  nav.appendChild(btn);
+});
+</script>
+</body>
+</html>

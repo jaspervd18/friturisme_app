@@ -30,7 +30,23 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-secure-store",
+      "expo-image",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Friturisme gebruikt uw locatie om frituren in de buurt te tonen.",
+          "locationWhenInUsePermission": "Friturisme gebruikt uw locatie om frituren in de buurt te tonen."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Friturisme heeft toegang tot uw foto's nodig om foto's bij check-ins te voegen.",
+          "cameraPermission": "Friturisme heeft toegang tot uw camera nodig om foto's bij check-ins te maken."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

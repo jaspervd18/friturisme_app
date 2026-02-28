@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Friturisme — Brand Board v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Outfit:wght@300;400;500;600;700&family=DM+Serif+Text:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --friet-geel: #F2C744;
+    --frituur-oranje: #E8742A;
+    --stoofvlees-bruin: #5C2E0E;
+    --mayo-creme: #FFF8E7;
+    --bicky-rood: #C4342D;
+    --frietkot-groen: #2D6B4A;
+    --nacht-donker: #1A1410;
+    --nacht-warm: #231B14;
+    --nacht-lighter: #2E2318;
+    --nacht-card: #302520;
+    --vet-wit: #FFFDF5;
+    --kroket-goud: #D4952B;
+    --text-soft: rgba(255,248,231,0.55);
+    --text-softer: rgba(255,248,231,0.35);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--mayo-creme);
+    color: var(--stoofvlees-bruin);
+    font-family: 'Outfit', sans-serif;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* === HERO === */
+  .hero {
+    background: var(--nacht-donker);
+    background-image: 
+      radial-gradient(ellipse at 20% 80%, rgba(232,116,42,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(242,199,68,0.06) 0%, transparent 60%);
+    padding: 80px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 6px solid var(--friet-geel);
+  }
+
+  .hero::before {
+    content: '🍟🍟🍟🍟🍟🍟🍟🍟🍟🍟🍟🍟🍟🍟🍟🍟🍟🍟🍟🍟';
+    position: absolute;
+    top: 12px;
+    left: 0;
+    right: 0;
+    font-size: 14px;
+    letter-spacing: 12px;
+    opacity: 0.2;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: var(--bicky-rood);
+    color: var(--vet-wit);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 6px 20px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+  }
+
+  .hero h1 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(44px, 9vw, 88px);
+    color: var(--friet-geel);
+    letter-spacing: 3px;
+    line-height: 1.05;
+    margin-bottom: 16px;
+    text-shadow: 3px 3px 0 var(--frituur-oranje), 6px 6px 0 rgba(0,0,0,0.3);
+    text-transform: uppercase;
+  }
+
+  .hero-sub {
+    font-family: 'DM Serif Text', serif;
+    font-style: italic;
+    font-size: clamp(20px, 3.5vw, 30px);
+    color: var(--kroket-goud);
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  .hero-tagline {
+    font-size: 14px;
+    color: var(--text-softer);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-top: 20px;
+  }
+
+  /* === SECTIONS === */
+  .section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 30px;
+  }
+
+  .section-title {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 26px;
+    color: var(--stoofvlees-bruin);
+    margin-bottom: 8px;
+    position: relative;
+    display: inline-block;
+  }
+
+  .section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--friet-geel);
+    border-radius: 2px;
+  }
+
+  .section-dark .section-title {
+    color: var(--friet-geel);
+  }
+  .section-dark .section-title::after {
+    background: var(--frituur-oranje);
+  }
+  .section-dark .section-desc {
+    color: var(--text-soft);
+  }
+
+  .section-desc {
+    color: #8B6F5E;
+    font-size: 15px;
+    margin-top: 12px;
+    margin-bottom: 40px;
+    max-width: 600px;
+    line-height: 1.6;
+  }
+
+  /* === DARK BAND === */
+  .dark-band {
+    background: var(--nacht-warm);
+    background-image: 
+      radial-gradient(ellipse at 70% 50%, rgba(232,116,42,0.05) 0%, transparent 60%);
+    position: relative;
+  }
+
+  .dark-band::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(242,199,68,0.2), transparent);
+  }
+
+  .dark-band::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(242,199,68,0.2), transparent);
+  }
+
+  /* === DIVIDERS === */
+  .divider {
+    text-align: center;
+    padding: 20px 0;
+    font-size: 20px;
+    letter-spacing: 16px;
+    opacity: 0.3;
+  }
+
+  .divider-dark {
+    text-align: center;
+    padding: 20px 0;
+    font-size: 20px;
+    letter-spacing: 16px;
+    opacity: 0.15;
+  }
+
+  /* === COLOR PALETTE === */
+  .colors {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 16px;
+  }
+
+  .color-card {
+    border-radius: 16px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 2px 12px rgba(92,46,14,0.08);
+    transition: transform 0.2s;
+  }
+
+  .color-card:hover { transform: translateY(-4px) rotate(-1deg); }
+
+  .color-swatch {
+    height: 100px;
+    position: relative;
+  }
+
+  .color-swatch::after {
+    content: attr(data-emoji);
+    position: absolute;
+    bottom: 8px;
+    right: 10px;
+    font-size: 22px;
+  }
+
+  .color-info {
+    padding: 12px 14px;
+  }
+
+  .color-name {
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 2px;
+  }
+
+  .color-hex {
+    font-size: 12px;
+    color: #8B6F5E;
+    font-family: monospace;
+  }
+
+  /* === TYPOGRAPHY === */
+  .type-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .type-card {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 2px 12px rgba(92,46,14,0.08);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .type-card::before {
+    content: attr(data-label);
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: white;
+    background: var(--frituur-oranje);
+    padding: 3px 10px;
+    border-radius: 10px;
+  }
+
+  .type-display {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(30px, 5vw, 48px);
+    color: var(--stoofvlees-bruin);
+    line-height: 1.1;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .type-accent {
+    font-family: 'DM Serif Text', serif;
+    font-style: italic;
+    font-size: clamp(22px, 3.5vw, 34px);
+    color: var(--frituur-oranje);
+    margin-bottom: 8px;
+    letter-spacing: 0.3px;
+    line-height: 1.3;
+  }
+
+  .type-body {
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    color: var(--stoofvlees-bruin);
+    line-height: 1.6;
+  }
+
+  .type-meta {
+    font-size: 12px;
+    color: #8B6F5E;
+    margin-top: 12px;
+    font-family: monospace;
+  }
+
+  /* === CUSTOM ICONS === */
+  .icons-showcase {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 24px;
+    margin-top: 10px;
+  }
+
+  .icon-item {
+    text-align: center;
+    padding: 24px 12px;
+    background: var(--nacht-card);
+    border-radius: 16px;
+    border: 1px solid rgba(242,199,68,0.08);
+    transition: transform 0.2s, border-color 0.2s;
+  }
+
+  .icon-item:hover {
+    transform: translateY(-3px);
+    border-color: rgba(242,199,68,0.25);
+  }
+
+  .icon-item svg {
+    display: block;
+    margin: 0 auto 12px;
+  }
+
+  .icon-item .icon-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--friet-geel);
+    letter-spacing: 0.5px;
+  }
+
+  /* === TONE OF VOICE === */
+  .tone-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .tone-card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 2px 12px rgba(92,46,14,0.08);
+    border-left: 5px solid var(--friet-geel);
+  }
+
+  .tone-card.dont {
+    border-left-color: var(--bicky-rood);
+    opacity: 0.75;
+  }
+
+  .tone-label {
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .tone-label.do { color: var(--frietkot-groen); }
+  .tone-label.dont-label { color: var(--bicky-rood); }
+
+  .tone-example {
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--stoofvlees-bruin);
+    font-style: italic;
+  }
+
+  .tone-context {
+    font-size: 12px;
+    color: #8B6F5E;
+    margin-top: 10px;
+  }
+
+  /* === APP ICON === */
+  .logo-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 32px;
+    align-items: start;
+  }
+
+  .logo-main {
+    text-align: center;
+  }
+
+  .logo-icon-large {
+    width: 160px;
+    height: 160px;
+    border-radius: 36px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--nacht-donker);
+    border: 3px solid var(--friet-geel);
+    box-shadow: 
+      0 0 30px rgba(242,199,68,0.15),
+      0 8px 32px rgba(0,0,0,0.3),
+      inset 0 1px 0 rgba(255,255,255,0.05);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .logo-icon-large::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(ellipse at 30% 30%, rgba(242,199,68,0.08) 0%, transparent 60%);
+  }
+
+  .logo-icon-large .logo-f {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 88px;
+    color: var(--friet-geel);
+    text-shadow: 2px 2px 0 var(--frituur-oranje), 0 0 20px rgba(242,199,68,0.2);
+    position: relative;
+    z-index: 1;
+    line-height: 1;
+  }
+
+  .logo-desc {
+    font-size: 13px;
+    color: #8B6F5E;
+    line-height: 1.6;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .logo-variants {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .logo-variant {
+    text-align: center;
+    padding: 20px;
+    border-radius: 16px;
+    background: white;
+    box-shadow: 0 2px 12px rgba(92,46,14,0.08);
+  }
+
+  .logo-variant-dark {
+    background: var(--nacht-donker);
+    border: 1px solid rgba(242,199,68,0.1);
+  }
+
+  .logo-variant-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 18px;
+    margin: 0 auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 40px;
+    line-height: 1;
+  }
+
+  .logo-variant .lv-label {
+    font-weight: 600;
+    font-size: 11px;
+    margin-bottom: 2px;
+  }
+
+  .logo-variant .lv-desc {
+    font-size: 10px;
+    color: #8B6F5E;
+  }
+
+  .logo-variant-dark .lv-label {
+    color: var(--vet-wit);
+  }
+
+  .logo-variant-dark .lv-desc {
+    color: var(--text-soft);
+  }
+
+  /* === RATING SYSTEM === */
+  .rating-demo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+  }
+
+  .ratings-preview {
+    background: var(--nacht-card);
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid rgba(242,199,68,0.08);
+  }
+
+  .ratings-preview-title {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 15px;
+    color: var(--vet-wit);
+    margin-bottom: 4px;
+  }
+
+  .ratings-preview-sub {
+    font-size: 12px;
+    color: var(--text-softer);
+    margin-bottom: 16px;
+  }
+
+  .rating-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 0;
+    border-bottom: 1px solid rgba(255,248,231,0.05);
+  }
+
+  .rating-row:last-child { border-bottom: none; }
+
+  .rating-label {
+    font-weight: 600;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255,248,231,0.7);
+  }
+
+  .rating-label svg { flex-shrink: 0; }
+
+  .rating-stars {
+    color: var(--friet-geel);
+    font-size: 14px;
+    letter-spacing: 2px;
+  }
+
+  .rating-explanation {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 12px rgba(92,46,14,0.08);
+  }
+
+  .rating-explanation h4 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 14px;
+    color: var(--frituur-oranje);
+    margin-bottom: 8px;
+    margin-top: 16px;
+  }
+
+  .rating-explanation h4:first-child { margin-top: 0; }
+
+  .rating-explanation p {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #6B5344;
+  }
+
+  /* === SLOGANS === */
+  .slogans-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+  }
+
+  .slogan-card {
+    background: var(--nacht-card);
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(242,199,68,0.06);
+  }
+
+  .slogan-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--friet-geel), var(--frituur-oranje));
+  }
+
+  .slogan-text {
+    font-family: 'DM Serif Text', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--friet-geel);
+    line-height: 1.5;
+    letter-spacing: 0.3px;
+  }
+
+  .slogan-use {
+    font-size: 10px;
+    color: var(--text-softer);
+    margin-top: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+
+  .slogan-highlight {
+    border: 2px solid var(--friet-geel);
+    background: rgba(242,199,68,0.05);
+  }
+
+  .slogan-highlight .slogan-text {
+    font-size: 22px;
+  }
+
+  /* === UI MOCKUP === */
+  .ui-mockup-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 32px;
+    align-items: start;
+  }
+
+  .ui-mockup {
+    background: var(--nacht-warm);
+    background-image: radial-gradient(ellipse at 50% 0%, rgba(242,199,68,0.03) 0%, transparent 70%);
+    border-radius: 32px;
+    padding: 16px 20px 20px;
+    max-width: 360px;
+    margin: 0 auto;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.3), 0 0 0 1px rgba(242,199,68,0.08);
+    overflow: hidden;
+  }
+
+  .ui-notch {
+    width: 120px;
+    height: 28px;
+    background: var(--nacht-donker);
+    border-radius: 0 0 16px 16px;
+    margin: -16px auto 12px;
+  }
+
+  .ui-status-bar {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-softer);
+    padding: 0 4px 12px;
+  }
+
+  .ui-header {
+    text-align: center;
+    padding: 6px 0 16px;
+  }
+
+  .ui-header h2 {
+    font-family: 'Archivo Black', sans-serif;
+    color: var(--friet-geel);
+    font-size: 20px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .ui-header p {
+    color: var(--text-softer);
+    font-size: 12px;
+    letter-spacing: 1px;
+    margin-top: 4px;
+  }
+
+  .ui-card {
+    background: var(--nacht-card);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(255,248,231,0.05);
+  }
+
+  .ui-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .ui-frituur-name {
+    font-weight: 700;
+    color: var(--vet-wit);
+    font-size: 14px;
+  }
+
+  .ui-score {
+    background: var(--friet-geel);
+    color: var(--stoofvlees-bruin);
+    font-weight: 700;
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 10px;
+  }
+
+  .ui-snacks {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+
+  .ui-snack-tag {
+    background: rgba(242,199,68,0.12);
+    color: var(--friet-geel);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 8px;
+  }
+
+  .ui-review-text {
+    font-size: 13px;
+    color: var(--text-soft);
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  .ui-mini-ratings {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255,248,231,0.05);
+    flex-wrap: wrap;
+  }
+
+  .ui-mini-rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--text-soft);
+  }
+
+  .ui-mini-rating svg { flex-shrink: 0; }
+
+  .ui-mini-score {
+    color: var(--friet-geel);
+    font-weight: 700;
+  }
+
+  .ui-user {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .ui-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--frituur-oranje);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: white;
+    font-weight: 700;
+  }
+
+  .ui-username {
+    font-size: 11px;
+    color: var(--text-softer);
+  }
+
+  .ui-checkin-btn {
+    display: block;
+    width: 100%;
+    background: var(--friet-geel);
+    color: var(--stoofvlees-bruin);
+    border: none;
+    padding: 13px;
+    border-radius: 14px;
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 15px;
+    margin-top: 6px;
+    cursor: pointer;
+    text-align: center;
+    box-shadow: 0 4px 0 var(--kroket-goud);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .ui-nav {
+    display: flex;
+    justify-content: space-around;
+    padding: 14px 0 6px;
+    margin-top: 10px;
+    border-top: 1px solid rgba(255,248,231,0.06);
+  }
+
+  .ui-nav-item {
+    text-align: center;
+    color: var(--text-softer);
+    font-size: 10px;
+    font-weight: 500;
+  }
+
+  .ui-nav-item.active { color: var(--friet-geel); }
+  .ui-nav-item svg { display: block; margin: 0 auto 3px; }
+
+  .ui-notes {
+    margin-top: 24px;
+  }
+
+  .ui-note {
+    background: white;
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(92,46,14,0.06);
+  }
+
+  .ui-note-title {
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--frituur-oranje);
+    margin-bottom: 4px;
+  }
+
+  .ui-note-desc {
+    font-size: 12px;
+    color: #6B5344;
+    line-height: 1.5;
+  }
+
+  /* === FOOTER === */
+  .footer {
+    background: var(--nacht-donker);
+    text-align: center;
+    padding: 40px;
+    color: var(--text-softer);
+    font-size: 13px;
+    border-top: 4px solid var(--friet-geel);
+  }
+
+  .footer strong {
+    font-family: 'Archivo Black', sans-serif;
+    color: var(--friet-geel);
+    font-size: 16px;
+    display: block;
+    margin-bottom: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 600px) {
+    .section { padding: 40px 20px; }
+    .colors { grid-template-columns: repeat(3, 1fr); }
+    .icons-showcase { grid-template-columns: repeat(3, 1fr); }
+    .logo-variants { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">Brand Board v2.0</div>
+  <h1>FRITURISME</h1>
+  <div class="hero-sub">Ge kent uw frituur. Maar kent ge alle frituren?</div>
+  <div class="hero-tagline">Check in · Rate · Ontdek</div>
+</div>
+
+<!-- KLEUREN -->
+<div class="section">
+  <div class="section-title">Kleurenpalet</div>
+  <p class="section-desc">Warm, vettig, en een beetje guilty pleasure. De kleuren van een vrijdagavond bij het frietkot.</p>
+  
+  <div class="colors">
+    <div class="color-card">
+      <div class="color-swatch" style="background: var(--friet-geel)" data-emoji="🍟"></div>
+      <div class="color-info"><div class="color-name">Friet Geel</div><div class="color-hex">#F2C744</div></div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background: var(--frituur-oranje)" data-emoji="🔥"></div>
+      <div class="color-info"><div class="color-name">Frituur Oranje</div><div class="color-hex">#E8742A</div></div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background: var(--bicky-rood)" data-emoji="🍔"></div>
+      <div class="color-info"><div class="color-name">Bicky Rood</div><div class="color-hex">#C4342D</div></div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background: var(--stoofvlees-bruin)" data-emoji="🥘"></div>
+      <div class="color-info"><div class="color-name">Stoofvlees Bruin</div><div class="color-hex">#5C2E0E</div></div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background: var(--frietkot-groen)" data-emoji="🏠"></div>
+      <div class="color-info"><div class="color-name">Frietkot Groen</div><div class="color-hex">#2D6B4A</div></div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background: var(--mayo-creme)" data-emoji="🥚"></div>
+      <div class="color-info"><div class="color-name">Mayo Crème</div><div class="color-hex">#FFF8E7</div></div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background: var(--kroket-goud)" data-emoji="✨"></div>
+      <div class="color-info"><div class="color-name">Kroket Goud</div><div class="color-hex">#D4952B</div></div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background: var(--nacht-donker)" data-emoji="🌙"></div>
+      <div class="color-info"><div class="color-name">Nacht Donker</div><div class="color-hex">#1A1410</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="divider">🍟 🍟 🍟</div>
+
+<!-- TYPOGRAFIE -->
+<div class="section">
+  <div class="section-title">Typografie</div>
+  <p class="section-desc">Drie lettertypes: stevig, charmant, en leesbaar.</p>
+  <div class="type-grid">
+    <div class="type-card" data-label="Koppen">
+      <div class="type-display">FRITURISME</div>
+      <div class="type-display" style="font-size: clamp(18px, 3vw, 28px); margin-top: 4px;">DEN BICKY TEST</div>
+      <div class="type-meta">Archivo Black — Titels en alles dat moet knallen. Compact, stevig, retro maar niet uitgerekt.</div>
+    </div>
+    <div class="type-card" data-label="Accent">
+      <div class="type-accent">"Ge kent uw frituur. Maar kent ge alle frituren?"</div>
+      <div class="type-meta">DM Serif Text Italic — Quotes, slogans, en dat vleugje klasse. Leesbaar met karakter.</div>
+    </div>
+    <div class="type-card" data-label="Body">
+      <div class="type-body">Friturisme is de app voor iedereen die vindt dat een bezoek aan het frietkot meer verdient dan een Google review van drie woorden. Check in, rate je snacks, en ontdek waarom ze in Gent een Julientje eten en jij daar nog nooit van gehoord hebt.</div>
+      <div class="type-meta">Outfit — Bodytekst en UI-elementen. Clean maar niet steriel.</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider">🍟 🍟 🍟</div>
+
+<!-- CUSTOM ICONS -->
+<div class="dark-band">
+<div class="section section-dark">
+  <div class="section-title">Custom icons</div>
+  <p class="section-desc">Custom lijn-icons op 48px voor branding en marketing. In de app zelf gebruiken we emoji's voor leesbaarheid op kleine formaten.</p>
+
+  <div class="icons-showcase">
+    <!-- Friet / puntzak -->
+    <div class="icon-item">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <!-- puntzak -->
+        <path d="M17 20L15 40h18L31 20" stroke="#F2C744" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- bovenrand puntzak -->
+        <path d="M15 20h18" stroke="#F2C744" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- frietjes stokjes -->
+        <rect x="19" y="8" width="2.5" height="13" rx="1.2" fill="#F2C744"/>
+        <rect x="23" y="6" width="2.5" height="15" rx="1.2" fill="#F2C744"/>
+        <rect x="27" y="9" width="2.5" height="12" rx="1.2" fill="#F2C744"/>
+      </svg>
+      <div class="icon-label">Friet</div>
+    </div>
+
+    <!-- Bicky / burger -->
+    <div class="icon-item">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <!-- broodje boven (bol) -->
+        <path d="M12 23h24" stroke="#F2C744" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M12 23c0-6.5 5.4-11 12-11s12 4.5 12 11" stroke="#F2C744" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- sesam -->
+        <circle cx="20" cy="17" r="1.2" fill="#F2C744"/>
+        <circle cx="26" cy="15.5" r="1.2" fill="#F2C744"/>
+        <circle cx="31" cy="18" r="1.2" fill="#F2C744"/>
+        <!-- vulling lijn -->
+        <path d="M12 27h24" stroke="#F2C744" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- sla/zigzag -->
+        <path d="M13 27c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0 3-2 4.5 0" stroke="#F2C744" stroke-width="1.8" stroke-linecap="round" fill="none" transform="translate(0,-1.5)"/>
+        <!-- broodje onder -->
+        <path d="M12 31h24" stroke="#F2C744" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M12 31c0 3 5 5.5 12 5.5s12-2.5 12-5.5" stroke="#F2C744" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+      <div class="icon-label">Bicky</div>
+    </div>
+
+    <!-- Snack / kroket -->
+    <div class="icon-item">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <!-- ovale kroket vorm -->
+        <ellipse cx="24" cy="24" rx="13" ry="8" stroke="#F2C744" stroke-width="2.5"/>
+        <!-- korst textuur lijntjes -->
+        <path d="M16 22c2 1.5 4 2 8 2s6-.5 8-2" stroke="#F2C744" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+        <path d="M16 26c2-1.5 4-2 8-2s6 .5 8 2" stroke="#F2C744" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+      </svg>
+      <div class="icon-label">Snacks</div>
+    </div>
+
+    <!-- Saus -->
+    <div class="icon-item">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <!-- potje saus / sauskom -->
+        <path d="M16 22c0-2 1.5-4 4-5v-3a4 4 0 018 0v3c2.5 1 4 3 4 5v10c0 3-3.5 5-8 5s-8-2-8-5V22z" stroke="#F2C744" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- saus niveau -->
+        <path d="M16.5 28c0 0 3 1.5 7.5 1.5s7.5-1.5 7.5-1.5" stroke="#F2C744" stroke-width="1.8" stroke-linecap="round"/>
+        <!-- lepeltje -->
+        <path d="M30 14l4-4" stroke="#F2C744" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="35.5" cy="8.5" r="2" stroke="#F2C744" stroke-width="1.8"/>
+      </svg>
+      <div class="icon-label">Sauzen</div>
+    </div>
+
+    <!-- Friturisme / frietkot huisje -->
+    <div class="icon-item">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <!-- huis -->
+        <path d="M10 22l14-11 14 11" stroke="#F2C744" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M14 20v16h20V20" stroke="#F2C744" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- deur / loket -->
+        <rect x="20" y="27" width="8" height="9" rx="1" stroke="#F2C744" stroke-width="2" stroke-linecap="round"/>
+        <!-- raampje -->
+        <rect x="20" y="27" width="8" height="5" rx="1" stroke="#F2C744" stroke-width="2" fill="rgba(242,199,68,0.15)"/>
+        <!-- uithangbord streep -->
+        <path d="M18 22h12" stroke="#F2C744" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      <div class="icon-label">Friturisme</div>
+    </div>
+
+    <!-- Service / hartje met hand -->
+    <div class="icon-item">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <!-- hart -->
+        <path d="M24 36C24 36 12 28 12 20c0-4.4 3.6-8 8-8 2.4 0 4.5 1.1 6 2.7C27.5 13.1 29.6 12 32 12c4.4 0 8 3.6 8 8 0 8-12 16-16 16z" stroke="#F2C744" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- smile in het hart -->
+        <path d="M20 22.5c.5-.5 1-.8 1.5-.8s1 .3 1.5.8" stroke="#F2C744" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M29 22.5c-.5-.5-1-.8-1.5-.8s-1 .3-1.5.8" stroke="#F2C744" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M21 26.5c1 1 2 1.5 3 1.5s2-.5 3-1.5" stroke="#F2C744" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <div class="icon-label">Service</div>
+    </div>
+
+    <!-- Prijs / eurootje -->
+    <div class="icon-item">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <!-- munt -->
+        <circle cx="24" cy="24" r="12" stroke="#F2C744" stroke-width="2.5"/>
+        <!-- euro teken -->
+        <path d="M28 17.5c-1.5-1-3-1.5-4.5-1.5-4 0-6.5 3-6.5 8s2.5 8 6.5 8c1.5 0 3-.5 4.5-1.5" stroke="#F2C744" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M15.5 22h8" stroke="#F2C744" stroke-width="2" stroke-linecap="round"/>
+        <path d="M15.5 26h8" stroke="#F2C744" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div class="icon-label">Prijs</div>
+    </div>
+
+    <!-- Check-in / pin -->
+    <div class="icon-item">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <!-- pin -->
+        <path d="M24 42l-1-1.5C16 31 12 26 12 21c0-6.6 5.4-12 12-12s12 5.4 12 12c0 5-4 10-11 19.5L24 42z" stroke="#F2C744" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- binnenste cirkel -->
+        <circle cx="24" cy="21" r="4.5" stroke="#F2C744" stroke-width="2.2"/>
+        <!-- stip -->
+        <circle cx="24" cy="21" r="1.5" fill="#F2C744"/>
+      </svg>
+      <div class="icon-label">Check-in</div>
+    </div>
+
+    <!-- Ontdek / verrekijker -->
+    <div class="icon-item">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <!-- zoeklens -->
+        <circle cx="22" cy="22" r="10" stroke="#F2C744" stroke-width="2.5"/>
+        <!-- handvat -->
+        <path d="M30 30l8 8" stroke="#F2C744" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- glans -->
+        <path d="M17 18c1-2 3-3.5 5-4" stroke="#F2C744" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      <div class="icon-label">Ontdek</div>
+    </div>
+
+    <!-- Trending / vlammetje -->
+    <div class="icon-item">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <!-- buitenste vlam -->
+        <path d="M24 6c2 8 10 12 10 20a10 10 0 01-20 0C14 18 22 14 24 6z" stroke="#F2C744" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- binnenste vlam -->
+        <path d="M24 20c1 4 5 6 5 10a5 5 0 01-10 0c0-4 4-6 5-10z" stroke="#F2C744" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="icon-label">Trending</div>
+    </div>
+
+    <!-- Profiel -->
+    <div class="icon-item">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <!-- hoofd -->
+        <circle cx="24" cy="17" r="7" stroke="#F2C744" stroke-width="2.5"/>
+        <!-- schouders -->
+        <path d="M10 40c0-7.7 6.3-14 14-14s14 6.3 14 14" stroke="#F2C744" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+      <div class="icon-label">Profiel</div>
+    </div>
+
+    <!-- Ster / rating -->
+    <div class="icon-item">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <!-- proper star path -->
+        <path d="M24 8l4.9 9.9 10.9 1.6-7.9 7.7 1.9 10.8L24 33l-9.8 5.1 1.9-10.8-7.9-7.7 10.9-1.6L24 8z" stroke="#F2C744" stroke-width="2.5" stroke-linejoin="round"/>
+      </svg>
+      <div class="icon-label">Rating</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- LOGO -->
+<div class="section">
+  <div class="section-title">App icon</div>
+  <p class="section-desc">Nacht & neon als basis. De gele F op donker, als een frietkot dat 's avonds oplicht.</p>
+
+  <div class="logo-section">
+    <div class="logo-main">
+      <div class="logo-icon-large">
+        <span class="logo-f">F</span>
+      </div>
+      <p style="font-family: 'Archivo Black', sans-serif; font-size: 18px; color: var(--stoofvlees-bruin); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 2px;">Friturisme</p>
+      <p class="logo-desc">Het primaire app-icoon. Donkere achtergrond met gouden glow. De F is herkenbaar op elk formaat, van 60x60 homescreen tot 1024px App Store listing.</p>
+    </div>
+
+    <div>
+      <div class="logo-variants">
+        <div class="logo-variant logo-variant-dark">
+          <div class="logo-variant-icon" style="background: var(--nacht-donker); border: 2px solid var(--friet-geel); color: var(--friet-geel); text-shadow: 0 0 12px rgba(242,199,68,0.3);">F</div>
+          <div class="lv-label">Neon glow</div>
+          <div class="lv-desc">Met subtiele glow</div>
+        </div>
+        <div class="logo-variant logo-variant-dark">
+          <div class="logo-variant-icon" style="background: var(--nacht-donker); border: 2px solid var(--frituur-oranje); color: var(--frituur-oranje);">F</div>
+          <div class="lv-label">Oranje variant</div>
+          <div class="lv-desc">Voor warmere context</div>
+        </div>
+        <div class="logo-variant">
+          <div class="logo-variant-icon" style="background: var(--friet-geel); color: var(--stoofvlees-bruin);">F</div>
+          <div class="lv-label" style="color: var(--stoofvlees-bruin)">Light mode</div>
+          <div class="lv-desc">Social media, print</div>
+        </div>
+        <div class="logo-variant">
+          <div class="logo-variant-icon" style="background: var(--stoofvlees-bruin); color: var(--friet-geel);">F</div>
+          <div class="lv-label" style="color: var(--stoofvlees-bruin)">Bruin variant</div>
+          <div class="lv-desc">Mono / subtiel</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider">🍟 🍟 🍟</div>
+
+<!-- TONE OF VOICE -->
+<div class="section">
+  <div class="section-title">Tone of voice</div>
+  <p class="section-desc">Friturisme praat zoals je beste maat die toevallig alles weet over frituren. Warm, grappig, een grapje te veel, maar nooit neerbuigend.</p>
+
+  <div class="tone-grid">
+    <div class="tone-card">
+      <div class="tone-label do">✅ Push notificatie</div>
+      <div class="tone-example">"Het is vrijdag. Ge weet wat dat betekent. 🍟"</div>
+      <div class="tone-context">Kort, herkenbaar, knipoog</div>
+    </div>
+    <div class="tone-card dont">
+      <div class="tone-label dont-label">❌ Niet zo</div>
+      <div class="tone-example">"Vergeet niet uw wekelijkse frituurbezoek te loggen in onze applicatie!"</div>
+      <div class="tone-context">Te formeel, voelt als een bedrijf</div>
+    </div>
+    <div class="tone-card">
+      <div class="tone-label do">✅ Lege staat</div>
+      <div class="tone-example">"Nog geen check-ins? Da's zoals een friet zonder zout. Doe er iets aan."</div>
+      <div class="tone-context">Humor die aanduwt</div>
+    </div>
+    <div class="tone-card dont">
+      <div class="tone-label dont-label">❌ Niet zo</div>
+      <div class="tone-example">"U heeft nog geen check-ins. Klik hier om te beginnen."</div>
+      <div class="tone-context">Geen persoonlijkheid</div>
+    </div>
+    <div class="tone-card">
+      <div class="tone-label do">✅ Review prompt</div>
+      <div class="tone-example">"Hoe was den bicky? Zeg het voort (of zwijg voor altijd)."</div>
+      <div class="tone-context">Speels, laagdrempelig</div>
+    </div>
+    <div class="tone-card">
+      <div class="tone-label do">✅ Error state</div>
+      <div class="tone-example">"Er is iets misgelopen. Waarschijnlijk het frituurvet. Probeer opnieuw."</div>
+      <div class="tone-context">Zelfs fouten hebben karakter</div>
+    </div>
+    <div class="tone-card">
+      <div class="tone-label do">✅ Geen resultaten</div>
+      <div class="tone-example">"Niks gevonden. Ofwel bestaat het niet, ofwel is het zo underground dat zelfs wij het niet kennen."</div>
+      <div class="tone-context">Eerlijk + grappig</div>
+    </div>
+    <div class="tone-card">
+      <div class="tone-label do">✅ Eerste check-in</div>
+      <div class="tone-example">"Proficiat! Uw eerste check-in. Het begin van een vettig avontuur."</div>
+      <div class="tone-context">Feestelijk maar niet over the top</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider">🍟 🍟 🍟</div>
+
+<!-- RATING SYSTEM -->
+<div class="dark-band">
+<div class="section section-dark">
+  <div class="section-title">Het Friturisme-systeem</div>
+  <p class="section-desc">Niet gewoon sterren. Friturisme reviewt op wat er echt toe doet.</p>
+
+  <div class="rating-demo-grid">
+    <div class="ratings-preview">
+      <div class="ratings-preview-title">Frituur Stefano's</div>
+      <div class="ratings-preview-sub">📍 Gent · 47 check-ins</div>
+
+      <div class="rating-row">
+        <div class="rating-label">
+          🏠 Friturisme
+        </div>
+        <div class="rating-stars">★★★★★</div>
+      </div>
+      <div class="rating-row">
+        <div class="rating-label">
+          🍟 Friet
+        </div>
+        <div class="rating-stars">★★★★☆</div>
+      </div>
+      <div class="rating-row">
+        <div class="rating-label">
+          🍔 Bicky
+        </div>
+        <div class="rating-stars">★★★★★</div>
+      </div>
+      <div class="rating-row">
+        <div class="rating-label">
+          🥩 Snacks
+        </div>
+        <div class="rating-stars">★★★★☆</div>
+      </div>
+      <div class="rating-row">
+        <div class="rating-label">
+          🥫 Sauzen
+        </div>
+        <div class="rating-stars">★★★★★</div>
+      </div>
+      <div class="rating-row">
+        <div class="rating-label">
+          💰 Prijs-kwaliteit
+        </div>
+        <div class="rating-stars">★★★★☆</div>
+      </div>
+      <div class="rating-row">
+        <div class="rating-label">
+          😊 Service
+        </div>
+        <div class="rating-stars">★★★★★</div>
+      </div>
+    </div>
+
+    <div class="rating-explanation">
+      <h4>🏠 Friturisme-score</h4>
+      <p>De signature categorie. Hoe authentiek is dit frietkot? Handgeschreven menu of digitaal bord? Frituurpan op vet of olie? Kent de frituurist je bij naam?</p>
+      
+      <h4>🍔 Den Bicky</h4>
+      <p>De lakmoesproef. Official dealer of baggerburger? Elke frituur wordt beoordeeld op hun bicky. Wordt later ook een ranglijst: "Beste bicky van Antwerpen."</p>
+
+      <h4>📱 Dynamisch</h4>
+      <p>Niet elke categorie verschijnt altijd. Geen bicky besteld? Dan zie je die categorie niet. Alleen friet gehaald? Dan enkel friet + friturisme. Nooit een enquête, altijd relevant.</p>
+
+      <h4>⚡ Over de frituur vs. over je bestelling</h4>
+      <p>Friturisme, service, en prijs-kwaliteit gaan over de frituur zelf. Friet, bicky, snacks, en sauzen gaan over wat je besteld hebt en verschijnen dynamisch.</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- SLOGANS -->
+<div class="section">
+  <div class="section-title">Slogans & copy</div>
+  <p class="section-desc">Mix van serieus en niet-serieus. Altijd met een knipoog.</p>
+
+  <div class="slogans-grid">
+    <div class="slogan-card slogan-highlight" style="grid-column: 1 / -1; background: var(--nacht-donker);">
+      <div class="slogan-text" style="font-size: 24px;">"Ge kent uw frituur. Maar kent ge alle frituren?"</div>
+      <div class="slogan-use">⭐ Hoofdtagline</div>
+    </div>
+    <div class="slogan-card" style="background: var(--nacht-donker);">
+      <div class="slogan-text">"Check in. Rate. Ontdek."</div>
+      <div class="slogan-use">Functionele tagline</div>
+    </div>
+    <div class="slogan-card" style="background: var(--nacht-donker);">
+      <div class="slogan-text">"Elk frietkot verdient een eerlijk proces."</div>
+      <div class="slogan-use">Marketing / social</div>
+    </div>
+    <div class="slogan-card" style="background: var(--nacht-donker);">
+      <div class="slogan-text">"5.000 frituren. 1 mening: de uwe."</div>
+      <div class="slogan-use">Launch campagne</div>
+    </div>
+    <div class="slogan-card" style="background: var(--nacht-donker);">
+      <div class="slogan-text">"Het is vrijdag. Ge weet wat dat betekent."</div>
+      <div class="slogan-use">Vrijdag push notificatie</div>
+    </div>
+    <div class="slogan-card" style="background: var(--nacht-donker);">
+      <div class="slogan-text">"Friet is geen bijgerecht. Friet is een levenskeuze."</div>
+      <div class="slogan-use">About page / merch</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider">🍟 🍟 🍟</div>
+
+<!-- UI MOCKUP -->
+<div class="dark-band">
+<div class="section section-dark">
+  <div class="section-title">UI sfeer</div>
+  <p class="section-desc">Warm donker thema met lichtere cards. Niet puur zwart maar een diepe, warme bruin-tint. De gele accenten knallen eruit.</p>
+
+  <div class="ui-mockup-wrapper">
+    <div class="ui-mockup">
+      <div class="ui-notch"></div>
+      <div class="ui-status-bar">
+        <span>21:37</span>
+        <span>📶 🔋</span>
+      </div>
+      <div class="ui-header">
+        <h2>FRITURISME</h2>
+        <p>📍 Gent · vrijdagavond</p>
+      </div>
+
+      <div class="ui-card">
+        <div class="ui-card-header">
+          <span class="ui-frituur-name">Frituur Stefano's</span>
+          <span class="ui-score">4.7 ★</span>
+        </div>
+        <div class="ui-snacks">
+          <span class="ui-snack-tag">🍟 Grote friet</span>
+          <span class="ui-snack-tag">🍔 Bicky</span>
+          <span class="ui-snack-tag">🥫 Stoofvlees</span>
+        </div>
+        <div class="ui-review-text">"Bicky was on point. Stoofvlees van een ander level."</div>
+        <div class="ui-mini-ratings">
+          <div class="ui-mini-rating">
+            🏠
+            <span class="ui-mini-score">5.0</span>
+          </div>
+          <div class="ui-mini-rating">
+            🍟
+            <span class="ui-mini-score">4.5</span>
+          </div>
+          <div class="ui-mini-rating">
+            🍔
+            <span class="ui-mini-score">4.8</span>
+          </div>
+        </div>
+        <div class="ui-user">
+          <div class="ui-avatar">T</div>
+          <span class="ui-username">Thomas · 2 min geleden</span>
+        </div>
+      </div>
+
+      <div class="ui-card">
+        <div class="ui-card-header">
+          <span class="ui-frituur-name">Frituur 't Pleintje</span>
+          <span class="ui-score">4.2 ★</span>
+        </div>
+        <div class="ui-snacks">
+          <span class="ui-snack-tag">🍟 Kleine friet</span>
+          <span class="ui-snack-tag">🥩 Julientje</span>
+        </div>
+        <div class="ui-review-text">"Eerste keer een Julientje. Waar is dit mijn hele leven geweest?"</div>
+        <div class="ui-user">
+          <div class="ui-avatar" style="background: var(--frietkot-groen);">S</div>
+          <span class="ui-username">Sarah · 18 min geleden</span>
+        </div>
+      </div>
+
+      <div class="ui-checkin-btn">🍟 CHECK IN</div>
+
+      <div class="ui-nav">
+        <div class="ui-nav-item active">
+          🏠<br>Home
+        </div>
+        <div class="ui-nav-item">
+          🗺️<br>Kaart
+        </div>
+        <div class="ui-nav-item">
+          🔥<br>Ontdek
+        </div>
+        <div class="ui-nav-item">
+          👤<br>Profiel
+        </div>
+      </div>
+    </div>
+
+    <div class="ui-notes">
+      <div class="ui-note">
+        <div class="ui-note-title">Warm donker, niet zwart</div>
+        <div class="ui-note-desc">De achtergrond is #231B14 (warm bruin-zwart), niet puur #000. Cards zijn #302520. Dit geeft diepte en warmte — als het interieur van een oud frietkot 's avonds.</div>
+      </div>
+      <div class="ui-note">
+        <div class="ui-note-title">Lichte secties voor afwisseling</div>
+        <div class="ui-note-desc">Niet elke pagina hoeft donker. De ontdek-pagina of het frituurprofiel kan een licht thema (mayo-crème achtergrond) gebruiken voor contrast en leesbaarheid.</div>
+      </div>
+      <div class="ui-note">
+        <div class="ui-note-title">Emoji's in de nav en UI</div>
+        <div class="ui-note-desc">De nav-bar en mini-ratings gebruiken emoji's voor herkenbaarheid op elk formaat. Custom SVG-icons worden ingezet voor branding, marketing, en grotere weergaves.</div>
+      </div>
+      <div class="ui-note">
+        <div class="ui-note-title">Mini-ratings bij check-ins</div>
+        <div class="ui-note-desc">Onder elke check-in zie je de categorie-scores compact met emoji's. Direct herkenbaar en leesbaar, zelfs op kleine schermen.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <strong>FRITURISME</strong>
+  Ge kent uw frituur. Maar kent ge alle frituren?<br>
+  <span style="font-size: 11px; margin-top: 8px; display: inline-block;">Brand Board v2.0 — Februari 2026 — Vertrouwelijk</span>
+</div>
+
+</body>
+</html>
