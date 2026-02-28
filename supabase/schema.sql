@@ -24,8 +24,10 @@ CREATE TYPE frituur_plan AS ENUM ('free', 'premium');
 -- ============================================================
 
 -- Users (extends Supabase auth.users)
+-- NOTE: No FK to auth.users so seed data works in SQL editor.
+-- The handle_new_user trigger handles the real auth link in production.
 CREATE TABLE public.users (
-  id          UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  id          UUID PRIMARY KEY,
   email       TEXT NOT NULL UNIQUE,
   name        TEXT NOT NULL,
   avatar_url  TEXT,
@@ -86,21 +88,17 @@ CREATE TABLE public.owner_replies (
 -- 3. INDEXES
 -- ============================================================
 
--- Frituren: location lookups, city filter
 CREATE INDEX idx_frituren_city ON public.frituren(city);
 CREATE INDEX idx_frituren_location ON public.frituren(latitude, longitude);
 CREATE INDEX idx_frituren_claimed_by ON public.frituren(claimed_by) WHERE claimed_by IS NOT NULL;
 
--- Check-ins: user feed, frituur page, chronological
 CREATE INDEX idx_check_ins_user_id ON public.check_ins(user_id);
 CREATE INDEX idx_check_ins_frituur_id ON public.check_ins(frituur_id);
 CREATE INDEX idx_check_ins_created_at ON public.check_ins(created_at DESC);
 
--- Ratings: lookup by check-in, aggregate by category
 CREATE INDEX idx_ratings_check_in_id ON public.ratings(check_in_id);
 CREATE INDEX idx_ratings_category ON public.ratings(category);
 
--- Owner replies: lookup by check-in
 CREATE INDEX idx_owner_replies_check_in_id ON public.owner_replies(check_in_id);
 
 -- ============================================================
@@ -114,101 +112,68 @@ ALTER TABLE public.ratings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.owner_replies ENABLE ROW LEVEL SECURITY;
 
 -- ---- USERS ----
-
--- Anyone can read user profiles
 CREATE POLICY "Users are viewable by everyone"
-  ON public.users FOR SELECT
-  USING (true);
+  ON public.users FOR SELECT USING (true);
 
--- Users can insert their own profile (on sign-up)
 CREATE POLICY "Users can insert own profile"
-  ON public.users FOR INSERT
-  WITH CHECK (auth.uid() = id);
+  ON public.users FOR INSERT WITH CHECK (auth.uid() = id);
 
--- Users can update their own profile
 CREATE POLICY "Users can update own profile"
   ON public.users FOR UPDATE
-  USING (auth.uid() = id)
-  WITH CHECK (auth.uid() = id);
+  USING (auth.uid() = id) WITH CHECK (auth.uid() = id);
 
 -- ---- FRITUREN ----
-
--- Anyone can read frituren
 CREATE POLICY "Frituren are viewable by everyone"
-  ON public.frituren FOR SELECT
-  USING (true);
+  ON public.frituren FOR SELECT USING (true);
 
--- Authenticated users can insert frituren (add new shops)
 CREATE POLICY "Authenticated users can add frituren"
   ON public.frituren FOR INSERT
   WITH CHECK (auth.role() = 'authenticated');
 
--- Only the claiming owner can update their frituur
 CREATE POLICY "Owners can update own frituur"
   ON public.frituren FOR UPDATE
-  USING (auth.uid() = claimed_by)
-  WITH CHECK (auth.uid() = claimed_by);
+  USING (auth.uid() = claimed_by) WITH CHECK (auth.uid() = claimed_by);
 
 -- ---- CHECK-INS ----
-
--- Anyone can read check-ins
 CREATE POLICY "Check-ins are viewable by everyone"
-  ON public.check_ins FOR SELECT
-  USING (true);
+  ON public.check_ins FOR SELECT USING (true);
 
--- Users can create their own check-ins
 CREATE POLICY "Users can create own check-ins"
-  ON public.check_ins FOR INSERT
-  WITH CHECK (auth.uid() = user_id);
+  ON public.check_ins FOR INSERT WITH CHECK (auth.uid() = user_id);
 
--- Users can update their own check-ins
 CREATE POLICY "Users can update own check-ins"
   ON public.check_ins FOR UPDATE
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
+  USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
 
--- Users can delete their own check-ins
 CREATE POLICY "Users can delete own check-ins"
-  ON public.check_ins FOR DELETE
-  USING (auth.uid() = user_id);
+  ON public.check_ins FOR DELETE USING (auth.uid() = user_id);
 
 -- ---- RATINGS ----
-
--- Anyone can read ratings
 CREATE POLICY "Ratings are viewable by everyone"
-  ON public.ratings FOR SELECT
-  USING (true);
+  ON public.ratings FOR SELECT USING (true);
 
--- Users can create ratings on their own check-ins
 CREATE POLICY "Users can create ratings on own check-ins"
   ON public.ratings FOR INSERT
   WITH CHECK (
     EXISTS (
       SELECT 1 FROM public.check_ins
-      WHERE check_ins.id = check_in_id
-      AND check_ins.user_id = auth.uid()
+      WHERE check_ins.id = check_in_id AND check_ins.user_id = auth.uid()
     )
   );
 
--- Users can update ratings on their own check-ins
 CREATE POLICY "Users can update ratings on own check-ins"
   ON public.ratings FOR UPDATE
   USING (
     EXISTS (
       SELECT 1 FROM public.check_ins
-      WHERE check_ins.id = check_in_id
-      AND check_ins.user_id = auth.uid()
+      WHERE check_ins.id = check_in_id AND check_ins.user_id = auth.uid()
     )
   );
 
 -- ---- OWNER REPLIES ----
-
--- Anyone can read owner replies
 CREATE POLICY "Owner replies are viewable by everyone"
-  ON public.owner_replies FOR SELECT
-  USING (true);
+  ON public.owner_replies FOR SELECT USING (true);
 
--- Owners can reply only on check-ins at their claimed frituur
 CREATE POLICY "Owners can reply on own frituur check-ins"
   ON public.owner_replies FOR INSERT
   WITH CHECK (
@@ -216,22 +181,16 @@ CREATE POLICY "Owners can reply on own frituur check-ins"
     AND EXISTS (
       SELECT 1 FROM public.check_ins ci
       JOIN public.frituren f ON f.id = ci.frituur_id
-      WHERE ci.id = check_in_id
-      AND f.claimed = true
-      AND f.claimed_by = auth.uid()
+      WHERE ci.id = check_in_id AND f.claimed = true AND f.claimed_by = auth.uid()
     )
   );
 
--- Owners can update their own replies
 CREATE POLICY "Owners can update own replies"
   ON public.owner_replies FOR UPDATE
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
+  USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
 
--- Owners can delete their own replies
 CREATE POLICY "Owners can delete own replies"
-  ON public.owner_replies FOR DELETE
-  USING (auth.uid() = user_id);
+  ON public.owner_replies FOR DELETE USING (auth.uid() = user_id);
 
 -- ============================================================
 -- 5. HELPER FUNCTIONS
@@ -252,11 +211,20 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
-CREATE OR REPLACE TRIGGER on_auth_user_created
-  AFTER INSERT ON auth.users
-  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+-- Try to create the trigger. If it fails (permissions), create it manually
+-- via Supabase Dashboard → Database → Triggers, or run this in the
+-- Supabase Dashboard SQL editor with "Run as" set to "postgres" role.
+DO $$
+BEGIN
+  CREATE TRIGGER on_auth_user_created
+    AFTER INSERT ON auth.users
+    FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+EXCEPTION
+  WHEN insufficient_privilege THEN
+    RAISE NOTICE 'Could not create trigger on auth.users. Create it manually in Supabase Dashboard → Database → Hooks/Triggers.';
+END $$;
 
--- Average rating per frituur (materialized view for performance)
+-- Average rating per frituur
 CREATE OR REPLACE FUNCTION public.get_frituur_avg_ratings(frituur_uuid UUID)
 RETURNS TABLE (
   category rating_category,
@@ -278,39 +246,15 @@ $$ LANGUAGE sql STABLE;
 -- 6. SEED DATA
 -- ============================================================
 
--- 6a. Test users (using raw inserts; in production these come from auth)
--- We create them in auth.users first, then public.users via the trigger
-
--- Temporarily disable the trigger so we can manually control public.users
-ALTER TABLE auth.users DISABLE TRIGGER on_auth_user_created;
-
-INSERT INTO auth.users (id, instance_id, email, encrypted_password, email_confirmed_at, raw_user_meta_data, role, aud, created_at, updated_at, confirmation_token, recovery_token)
-VALUES
-  ('a1b2c3d4-0001-4000-a000-000000000001', '00000000-0000-0000-0000-000000000000', 'jan@test.be',      crypt('Test1234!', gen_salt('bf')), now(), '{"full_name":"Jan De Fransen"}',     'authenticated', 'authenticated', now(), now(), '', ''),
-  ('a1b2c3d4-0001-4000-a000-000000000002', '00000000-0000-0000-0000-000000000000', 'lies@test.be',     crypt('Test1234!', gen_salt('bf')), now(), '{"full_name":"Lies Van Hoeck"}',     'authenticated', 'authenticated', now(), now(), '', ''),
-  ('a1b2c3d4-0001-4000-a000-000000000003', '00000000-0000-0000-0000-000000000000', 'bram@test.be',     crypt('Test1234!', gen_salt('bf')), now(), '{"full_name":"Bram Peeters"}',      'authenticated', 'authenticated', now(), now(), '', ''),
-  ('a1b2c3d4-0001-4000-a000-000000000004', '00000000-0000-0000-0000-000000000000', 'noor@test.be',     crypt('Test1234!', gen_salt('bf')), now(), '{"full_name":"Noor Claes"}',        'authenticated', 'authenticated', now(), now(), '', ''),
-  ('a1b2c3d4-0001-4000-a000-000000000005', '00000000-0000-0000-0000-000000000000', 'wout@test.be',     crypt('Test1234!', gen_salt('bf')), now(), '{"full_name":"Wout Janssens"}',     'authenticated', 'authenticated', now(), now(), '', '');
-
--- Also insert identities for each user (required by Supabase auth)
-INSERT INTO auth.identities (id, user_id, provider_id, provider, identity_data, last_sign_in_at, created_at, updated_at)
-VALUES
-  (gen_random_uuid(), 'a1b2c3d4-0001-4000-a000-000000000001', 'a1b2c3d4-0001-4000-a000-000000000001', 'email', '{"sub":"a1b2c3d4-0001-4000-a000-000000000001","email":"jan@test.be"}',   now(), now(), now()),
-  (gen_random_uuid(), 'a1b2c3d4-0001-4000-a000-000000000002', 'a1b2c3d4-0001-4000-a000-000000000002', 'email', '{"sub":"a1b2c3d4-0001-4000-a000-000000000002","email":"lies@test.be"}',  now(), now(), now()),
-  (gen_random_uuid(), 'a1b2c3d4-0001-4000-a000-000000000003', 'a1b2c3d4-0001-4000-a000-000000000003', 'email', '{"sub":"a1b2c3d4-0001-4000-a000-000000000003","email":"bram@test.be"}',  now(), now(), now()),
-  (gen_random_uuid(), 'a1b2c3d4-0001-4000-a000-000000000004', 'a1b2c3d4-0001-4000-a000-000000000004', 'email', '{"sub":"a1b2c3d4-0001-4000-a000-000000000004","email":"noor@test.be"}',  now(), now(), now()),
-  (gen_random_uuid(), 'a1b2c3d4-0001-4000-a000-000000000005', 'a1b2c3d4-0001-4000-a000-000000000005', 'email', '{"sub":"a1b2c3d4-0001-4000-a000-000000000005","email":"wout@test.be"}',  now(), now(), now());
-
--- Re-enable the trigger
-ALTER TABLE auth.users ENABLE TRIGGER on_auth_user_created;
-
--- Now insert public profiles manually
+-- 6a. Seed 5 test users (directly in public.users, no auth.users needed)
+-- In production, the handle_new_user trigger creates these automatically on signup.
+-- For testing login, create users via Supabase Dashboard → Authentication → Users.
 INSERT INTO public.users (id, email, name, avatar_url, favorite_snacks, reviewer_type) VALUES
-  ('a1b2c3d4-0001-4000-a000-000000000001', 'jan@test.be',  'Jan De Fransen',  NULL, ARRAY['Bicky','Stoofvlees','Frikandel'],             'De Bicky Connaisseur'),
-  ('a1b2c3d4-0001-4000-a000-000000000002', 'lies@test.be', 'Lies Van Hoeck',  NULL, ARRAY['Garnaalkroket','Kaaskroket','Loempia'],        'Krokettenkoningin'),
-  ('a1b2c3d4-0001-4000-a000-000000000003', 'bram@test.be', 'Bram Peeters',    NULL, ARRAY['Mexicano','Hamburger','Mitraillette'],         'Sauzenspecialist'),
-  ('a1b2c3d4-0001-4000-a000-000000000004', 'noor@test.be', 'Noor Claes',      NULL, ARRAY['Viandel','Kipnuggets','Gehaktbal'],            'Frietfluisteraar'),
-  ('a1b2c3d4-0001-4000-a000-000000000005', 'wout@test.be', 'Wout Janssens',   NULL, ARRAY['Bicky','Mexicano','Stoofvlees','Frikandel'],   'Nieuweling');
+  ('a1b2c3d4-0001-4000-a000-000000000001', 'jan@test.be',  'Jan De Fransen',  NULL, ARRAY['Bicky','Stoofvlees','Frikandel'],              'De Bicky Connaisseur'),
+  ('a1b2c3d4-0001-4000-a000-000000000002', 'lies@test.be', 'Lies Van Hoeck',  NULL, ARRAY['Garnaalkroket','Kaaskroket','Loempia'],         'Krokettenkoningin'),
+  ('a1b2c3d4-0001-4000-a000-000000000003', 'bram@test.be', 'Bram Peeters',    NULL, ARRAY['Mexicano','Hamburger','Mitraillette'],          'Sauzenspecialist'),
+  ('a1b2c3d4-0001-4000-a000-000000000004', 'noor@test.be', 'Noor Claes',      NULL, ARRAY['Viandel','Kipnuggets','Gehaktbal'],             'Frietfluisteraar'),
+  ('a1b2c3d4-0001-4000-a000-000000000005', 'wout@test.be', 'Wout Janssens',   NULL, ARRAY['Bicky','Mexicano','Stoofvlees','Frikandel'],    'Nieuweling');
 
 -- 6b. Seed 20 frituren in Gent
 INSERT INTO public.frituren (id, name, address, city, latitude, longitude, phone, claimed, verified, opening_hours) VALUES
@@ -335,14 +279,13 @@ INSERT INTO public.frituren (id, name, address, city, latitude, longitude, phone
   ('f0000000-0000-4000-a000-000000000019', 'Nen Dansen',                    'Nieuwpoort 4',                  'Gent', 51.05870, 3.72010, '09 233 22 49', false, true,  '{"ma":"11:00-21:30","di":"11:00-21:30","wo":"11:00-21:30","do":"11:00-21:30","vr":"11:00-22:30","za":"11:00-23:00","zo":"12:00-21:00"}'),
   ('f0000000-0000-4000-a000-000000000020', 'Frituur Ledeberg',              'Hoveniersstraat 62',            'Gent', 51.03680, 3.73950, '09 231 08 37', false, false, '{"ma":"11:30-21:00","di":"gesloten","wo":"11:30-21:00","do":"11:30-21:00","vr":"11:30-22:00","za":"11:30-22:00","zo":"12:00-20:00"}');
 
--- Set Bij Martine as claimed by Jan (user 1)
+-- Set Bij Martine as claimed by Jan
 UPDATE public.frituren
 SET claimed_by = 'a1b2c3d4-0001-4000-a000-000000000001'
 WHERE id = 'f0000000-0000-4000-a000-000000000004';
 
--- 6c. Seed 30 check-ins spread across frituren and users
+-- 6c. Seed 30 check-ins
 INSERT INTO public.check_ins (id, user_id, frituur_id, snacks, sauces, text, created_at) VALUES
-  -- Jan (user 1) - 8 check-ins
   ('c0000000-0000-4000-a000-000000000001', 'a1b2c3d4-0001-4000-a000-000000000001', 'f0000000-0000-4000-a000-000000000001', ARRAY['Bicky','Friet'],               ARRAY['Mayonaise','Ketchup'],       'Propere friet, krokant van buiten. Den bicky was legendarisch.',     now() - interval '2 days'),
   ('c0000000-0000-4000-a000-000000000002', 'a1b2c3d4-0001-4000-a000-000000000001', 'f0000000-0000-4000-a000-000000000003', ARRAY['Stoofvlees','Friet'],           ARRAY['Stoofvleessaus'],            'Stoofvlees zoals bij mijn bomma. Top.',                              now() - interval '5 days'),
   ('c0000000-0000-4000-a000-000000000003', 'a1b2c3d4-0001-4000-a000-000000000001', 'f0000000-0000-4000-a000-000000000007', ARRAY['Frikandel','Friet'],            ARRAY['Curryketchup'],              NULL,                                                                  now() - interval '8 days'),
@@ -351,8 +294,6 @@ INSERT INTO public.check_ins (id, user_id, frituur_id, snacks, sauces, text, cre
   ('c0000000-0000-4000-a000-000000000006', 'a1b2c3d4-0001-4000-a000-000000000001', 'f0000000-0000-4000-a000-000000000002', ARRAY['Mitraillette','Friet'],         ARRAY['Andalouse','Mayonaise'],     'Na een nachtje Overpoort moet dat.',                                 now() - interval '20 days'),
   ('c0000000-0000-4000-a000-000000000007', 'a1b2c3d4-0001-4000-a000-000000000001', 'f0000000-0000-4000-a000-000000000014', ARRAY['Bicky','Garnaalkroket'],        ARRAY['Cocktail'],                  'De garnaalkroket hier is echt de max.',                              now() - interval '25 days'),
   ('c0000000-0000-4000-a000-000000000008', 'a1b2c3d4-0001-4000-a000-000000000001', 'f0000000-0000-4000-a000-000000000006', ARRAY['Friet'],                        ARRAY['Mayonaise'],                 'Puur. Alleen friet. Meer hebt ge niet nodig.',                       now() - interval '30 days'),
-
-  -- Lies (user 2) - 7 check-ins
   ('c0000000-0000-4000-a000-000000000009', 'a1b2c3d4-0001-4000-a000-000000000002', 'f0000000-0000-4000-a000-000000000001', ARRAY['Garnaalkroket','Friet'],        ARRAY['Cocktail'],                  'Perfecte garnaalkroket. Krokant, goed gevuld.',                     now() - interval '1 day'),
   ('c0000000-0000-4000-a000-000000000010', 'a1b2c3d4-0001-4000-a000-000000000002', 'f0000000-0000-4000-a000-000000000004', ARRAY['Kaaskroket','Loempia','Friet'], ARRAY['Zoete chili'],               'Kaaskroket was zalig, loempia iets te vettig.',                     now() - interval '4 days'),
   ('c0000000-0000-4000-a000-000000000011', 'a1b2c3d4-0001-4000-a000-000000000002', 'f0000000-0000-4000-a000-000000000011', ARRAY['Garnaalkroket','Friet'],        ARRAY['Tartaar'],                   'Chez Fernand doet een faire garnaalkroket.',                        now() - interval '9 days'),
@@ -360,228 +301,65 @@ INSERT INTO public.check_ins (id, user_id, frituur_id, snacks, sauces, text, cre
   ('c0000000-0000-4000-a000-000000000013', 'a1b2c3d4-0001-4000-a000-000000000002', 'f0000000-0000-4000-a000-000000000019', ARRAY['Kaaskroket','Friet'],           ARRAY['Mayonaise'],                 'Altijd goe hier. Snelle bediening ook.',                            now() - interval '18 days'),
   ('c0000000-0000-4000-a000-000000000014', 'a1b2c3d4-0001-4000-a000-000000000002', 'f0000000-0000-4000-a000-000000000003', ARRAY['Garnaalkroket','Kaaskroket'],   ARRAY['Cocktail','Tartaar'],        'Double kroket actie. Geen spijt.',                                  now() - interval '22 days'),
   ('c0000000-0000-4000-a000-000000000015', 'a1b2c3d4-0001-4000-a000-000000000002', 'f0000000-0000-4000-a000-000000000010', ARRAY['Loempia','Friet'],              ARRAY['Zoete chili'],               'Gentbrugge represent.',                                              now() - interval '28 days'),
-
-  -- Bram (user 3) - 6 check-ins
   ('c0000000-0000-4000-a000-000000000016', 'a1b2c3d4-0001-4000-a000-000000000003', 'f0000000-0000-4000-a000-000000000002', ARRAY['Mexicano','Friet'],             ARRAY['Samoerai','Andalouse'],      '03:00 s nachts. Precies wat ge nodig hebt.',                        now() - interval '3 days'),
   ('c0000000-0000-4000-a000-000000000017', 'a1b2c3d4-0001-4000-a000-000000000003', 'f0000000-0000-4000-a000-000000000005', ARRAY['Hamburger','Friet'],            ARRAY['Ketchup','Mayonaise'],       'Eerlijke hamburger, goeie prijs.',                                  now() - interval '7 days'),
   ('c0000000-0000-4000-a000-000000000018', 'a1b2c3d4-0001-4000-a000-000000000003', 'f0000000-0000-4000-a000-000000000008', ARRAY['Mitraillette','Friet'],         ARRAY['Andalouse'],                 'Mitraillette zo groot als mijn onderarm.',                          now() - interval '11 days'),
   ('c0000000-0000-4000-a000-000000000019', 'a1b2c3d4-0001-4000-a000-000000000003', 'f0000000-0000-4000-a000-000000000012', ARRAY['Mexicano','Hamburger'],         ARRAY['Samoerai'],                  NULL,                                                                  now() - interval '16 days'),
   ('c0000000-0000-4000-a000-000000000020', 'a1b2c3d4-0001-4000-a000-000000000003', 'f0000000-0000-4000-a000-000000000017', ARRAY['Mitraillette','Friet'],         ARRAY['Samoerai','Ketchup'],        'Het Bickyhuis maakt ook mitraillettes. Goedgekeurd.',               now() - interval '21 days'),
   ('c0000000-0000-4000-a000-000000000021', 'a1b2c3d4-0001-4000-a000-000000000003', 'f0000000-0000-4000-a000-000000000015', ARRAY['Hamburger','Friet'],            ARRAY['Ketchup'],                   'Simpel maar proper.',                                                now() - interval '27 days'),
-
-  -- Noor (user 4) - 5 check-ins
   ('c0000000-0000-4000-a000-000000000022', 'a1b2c3d4-0001-4000-a000-000000000004', 'f0000000-0000-4000-a000-000000000001', ARRAY['Viandel','Kipnuggets','Friet'], ARRAY['Mayonaise'],                 'Goeie kipnuggets, viandel was ok.',                                 now() - interval '2 days'),
   ('c0000000-0000-4000-a000-000000000023', 'a1b2c3d4-0001-4000-a000-000000000004', 'f0000000-0000-4000-a000-000000000006', ARRAY['Gehaktbal','Friet'],            ARRAY['Tomatensaus'],               'Gehaktbal in tomatensaus is de comfort food die ge nodig hebt.',    now() - interval '6 days'),
   ('c0000000-0000-4000-a000-000000000024', 'a1b2c3d4-0001-4000-a000-000000000004', 'f0000000-0000-4000-a000-000000000013', ARRAY['Kipnuggets','Friet'],           ARRAY['Curryketchup'],              NULL,                                                                  now() - interval '13 days'),
   ('c0000000-0000-4000-a000-000000000025', 'a1b2c3d4-0001-4000-a000-000000000004', 'f0000000-0000-4000-a000-000000000018', ARRAY['Viandel','Friet'],              ARRAY['Mayonaise','Ketchup'],       'Frituur De Kouter doet een deftige viandel.',                       now() - interval '19 days'),
   ('c0000000-0000-4000-a000-000000000026', 'a1b2c3d4-0001-4000-a000-000000000004', 'f0000000-0000-4000-a000-000000000009', ARRAY['Gehaktbal','Kipnuggets'],       ARRAY['Tomatensaus'],               'Iets te lang moeten wachten, maar het was het waard.',              now() - interval '24 days'),
-
-  -- Wout (user 5) - 4 check-ins
   ('c0000000-0000-4000-a000-000000000027', 'a1b2c3d4-0001-4000-a000-000000000005', 'f0000000-0000-4000-a000-000000000007', ARRAY['Bicky','Mexicano','Friet'],     ARRAY['Samoerai','Mayonaise'],      'Eerste keer hier. Wa een ontdekking!',                              now() - interval '1 day'),
   ('c0000000-0000-4000-a000-000000000028', 'a1b2c3d4-0001-4000-a000-000000000005', 'f0000000-0000-4000-a000-000000000020', ARRAY['Stoofvlees','Friet'],           ARRAY['Stoofvleessaus'],            'Ledeberg heeft een hidden gem.',                                    now() - interval '10 days'),
   ('c0000000-0000-4000-a000-000000000029', 'a1b2c3d4-0001-4000-a000-000000000005', 'f0000000-0000-4000-a000-000000000004', ARRAY['Frikandel','Bicky'],            ARRAY['Curryketchup','Mayonaise'],  'Bij Martine is altijd gezellig.',                                   now() - interval '17 days'),
   ('c0000000-0000-4000-a000-000000000030', 'a1b2c3d4-0001-4000-a000-000000000005', 'f0000000-0000-4000-a000-000000000019', ARRAY['Mexicano','Friet'],             ARRAY['Samoerai'],                  NULL,                                                                  now() - interval '23 days');
 
--- 6d. Seed ratings for all 30 check-ins
--- Each check-in gets 2-5 ratings across different categories
-
+-- 6d. Seed ratings
 INSERT INTO public.ratings (check_in_id, category, score) VALUES
-  -- Check-in 1 (Jan @ 't Gents Frietkot)
-  ('c0000000-0000-4000-a000-000000000001', 'friturisme',       5),
-  ('c0000000-0000-4000-a000-000000000001', 'service',          4),
-  ('c0000000-0000-4000-a000-000000000001', 'prijs_kwaliteit',  4),
-  ('c0000000-0000-4000-a000-000000000001', 'friet',            5),
-  ('c0000000-0000-4000-a000-000000000001', 'bicky',            5),
+  ('c0000000-0000-4000-a000-000000000001', 'friturisme', 5), ('c0000000-0000-4000-a000-000000000001', 'service', 4), ('c0000000-0000-4000-a000-000000000001', 'prijs_kwaliteit', 4), ('c0000000-0000-4000-a000-000000000001', 'friet', 5), ('c0000000-0000-4000-a000-000000000001', 'bicky', 5),
+  ('c0000000-0000-4000-a000-000000000002', 'friturisme', 4), ('c0000000-0000-4000-a000-000000000002', 'service', 4), ('c0000000-0000-4000-a000-000000000002', 'prijs_kwaliteit', 3), ('c0000000-0000-4000-a000-000000000002', 'friet', 4), ('c0000000-0000-4000-a000-000000000002', 'snacks', 5),
+  ('c0000000-0000-4000-a000-000000000003', 'friturisme', 3), ('c0000000-0000-4000-a000-000000000003', 'friet', 4), ('c0000000-0000-4000-a000-000000000003', 'snacks', 3),
+  ('c0000000-0000-4000-a000-000000000004', 'friturisme', 4), ('c0000000-0000-4000-a000-000000000004', 'service', 5), ('c0000000-0000-4000-a000-000000000004', 'prijs_kwaliteit', 4), ('c0000000-0000-4000-a000-000000000004', 'bicky', 5),
+  ('c0000000-0000-4000-a000-000000000005', 'friturisme', 4), ('c0000000-0000-4000-a000-000000000005', 'service', 3), ('c0000000-0000-4000-a000-000000000005', 'friet', 4), ('c0000000-0000-4000-a000-000000000005', 'snacks', 4),
+  ('c0000000-0000-4000-a000-000000000006', 'friturisme', 3), ('c0000000-0000-4000-a000-000000000006', 'service', 3), ('c0000000-0000-4000-a000-000000000006', 'prijs_kwaliteit', 3), ('c0000000-0000-4000-a000-000000000006', 'friet', 3), ('c0000000-0000-4000-a000-000000000006', 'snacks', 3),
+  ('c0000000-0000-4000-a000-000000000007', 'friturisme', 5), ('c0000000-0000-4000-a000-000000000007', 'service', 4), ('c0000000-0000-4000-a000-000000000007', 'snacks', 5), ('c0000000-0000-4000-a000-000000000007', 'sauzen', 4),
+  ('c0000000-0000-4000-a000-000000000008', 'friturisme', 4), ('c0000000-0000-4000-a000-000000000008', 'friet', 5), ('c0000000-0000-4000-a000-000000000008', 'sauzen', 4),
+  ('c0000000-0000-4000-a000-000000000009', 'friturisme', 5), ('c0000000-0000-4000-a000-000000000009', 'service', 5), ('c0000000-0000-4000-a000-000000000009', 'prijs_kwaliteit', 4), ('c0000000-0000-4000-a000-000000000009', 'snacks', 5),
+  ('c0000000-0000-4000-a000-000000000010', 'friturisme', 4), ('c0000000-0000-4000-a000-000000000010', 'service', 4), ('c0000000-0000-4000-a000-000000000010', 'prijs_kwaliteit', 4), ('c0000000-0000-4000-a000-000000000010', 'snacks', 3), ('c0000000-0000-4000-a000-000000000010', 'sauzen', 4),
+  ('c0000000-0000-4000-a000-000000000011', 'friturisme', 4), ('c0000000-0000-4000-a000-000000000011', 'service', 3), ('c0000000-0000-4000-a000-000000000011', 'snacks', 4),
+  ('c0000000-0000-4000-a000-000000000012', 'friturisme', 3), ('c0000000-0000-4000-a000-000000000012', 'friet', 3), ('c0000000-0000-4000-a000-000000000012', 'snacks', 3), ('c0000000-0000-4000-a000-000000000012', 'sauzen', 4),
+  ('c0000000-0000-4000-a000-000000000013', 'friturisme', 4), ('c0000000-0000-4000-a000-000000000013', 'service', 5), ('c0000000-0000-4000-a000-000000000013', 'prijs_kwaliteit', 4), ('c0000000-0000-4000-a000-000000000013', 'snacks', 4),
+  ('c0000000-0000-4000-a000-000000000014', 'friturisme', 4), ('c0000000-0000-4000-a000-000000000014', 'snacks', 5), ('c0000000-0000-4000-a000-000000000014', 'sauzen', 4),
+  ('c0000000-0000-4000-a000-000000000015', 'friturisme', 3), ('c0000000-0000-4000-a000-000000000015', 'service', 3), ('c0000000-0000-4000-a000-000000000015', 'friet', 3), ('c0000000-0000-4000-a000-000000000015', 'snacks', 2),
+  ('c0000000-0000-4000-a000-000000000016', 'friturisme', 3), ('c0000000-0000-4000-a000-000000000016', 'service', 4), ('c0000000-0000-4000-a000-000000000016', 'friet', 3), ('c0000000-0000-4000-a000-000000000016', 'snacks', 4), ('c0000000-0000-4000-a000-000000000016', 'sauzen', 5),
+  ('c0000000-0000-4000-a000-000000000017', 'friturisme', 3), ('c0000000-0000-4000-a000-000000000017', 'prijs_kwaliteit', 4), ('c0000000-0000-4000-a000-000000000017', 'snacks', 3),
+  ('c0000000-0000-4000-a000-000000000018', 'friturisme', 4), ('c0000000-0000-4000-a000-000000000018', 'service', 3), ('c0000000-0000-4000-a000-000000000018', 'prijs_kwaliteit', 5), ('c0000000-0000-4000-a000-000000000018', 'friet', 4), ('c0000000-0000-4000-a000-000000000018', 'snacks', 4),
+  ('c0000000-0000-4000-a000-000000000019', 'friturisme', 2), ('c0000000-0000-4000-a000-000000000019', 'snacks', 3), ('c0000000-0000-4000-a000-000000000019', 'sauzen', 3),
+  ('c0000000-0000-4000-a000-000000000020', 'friturisme', 4), ('c0000000-0000-4000-a000-000000000020', 'service', 5), ('c0000000-0000-4000-a000-000000000020', 'prijs_kwaliteit', 3), ('c0000000-0000-4000-a000-000000000020', 'friet', 4), ('c0000000-0000-4000-a000-000000000020', 'snacks', 4),
+  ('c0000000-0000-4000-a000-000000000021', 'friturisme', 3), ('c0000000-0000-4000-a000-000000000021', 'service', 3), ('c0000000-0000-4000-a000-000000000021', 'friet', 3),
+  ('c0000000-0000-4000-a000-000000000022', 'friturisme', 5), ('c0000000-0000-4000-a000-000000000022', 'service', 4), ('c0000000-0000-4000-a000-000000000022', 'snacks', 4), ('c0000000-0000-4000-a000-000000000022', 'sauzen', 3),
+  ('c0000000-0000-4000-a000-000000000023', 'friturisme', 4), ('c0000000-0000-4000-a000-000000000023', 'service', 4), ('c0000000-0000-4000-a000-000000000023', 'prijs_kwaliteit', 3), ('c0000000-0000-4000-a000-000000000023', 'friet', 4), ('c0000000-0000-4000-a000-000000000023', 'snacks', 4),
+  ('c0000000-0000-4000-a000-000000000024', 'friturisme', 3), ('c0000000-0000-4000-a000-000000000024', 'friet', 3), ('c0000000-0000-4000-a000-000000000024', 'snacks', 2),
+  ('c0000000-0000-4000-a000-000000000025', 'friturisme', 3), ('c0000000-0000-4000-a000-000000000025', 'service', 4), ('c0000000-0000-4000-a000-000000000025', 'prijs_kwaliteit', 3), ('c0000000-0000-4000-a000-000000000025', 'snacks', 3),
+  ('c0000000-0000-4000-a000-000000000026', 'friturisme', 4), ('c0000000-0000-4000-a000-000000000026', 'service', 2), ('c0000000-0000-4000-a000-000000000026', 'snacks', 4), ('c0000000-0000-4000-a000-000000000026', 'sauzen', 3),
+  ('c0000000-0000-4000-a000-000000000027', 'friturisme', 5), ('c0000000-0000-4000-a000-000000000027', 'service', 4), ('c0000000-0000-4000-a000-000000000027', 'prijs_kwaliteit', 4), ('c0000000-0000-4000-a000-000000000027', 'friet', 5), ('c0000000-0000-4000-a000-000000000027', 'bicky', 4), ('c0000000-0000-4000-a000-000000000027', 'snacks', 4), ('c0000000-0000-4000-a000-000000000027', 'sauzen', 5),
+  ('c0000000-0000-4000-a000-000000000028', 'friturisme', 4), ('c0000000-0000-4000-a000-000000000028', 'service', 4), ('c0000000-0000-4000-a000-000000000028', 'prijs_kwaliteit', 5), ('c0000000-0000-4000-a000-000000000028', 'friet', 4), ('c0000000-0000-4000-a000-000000000028', 'snacks', 5),
+  ('c0000000-0000-4000-a000-000000000029', 'friturisme', 4), ('c0000000-0000-4000-a000-000000000029', 'service', 5), ('c0000000-0000-4000-a000-000000000029', 'prijs_kwaliteit', 4), ('c0000000-0000-4000-a000-000000000029', 'bicky', 4), ('c0000000-0000-4000-a000-000000000029', 'snacks', 3),
+  ('c0000000-0000-4000-a000-000000000030', 'friturisme', 4), ('c0000000-0000-4000-a000-000000000030', 'service', 3), ('c0000000-0000-4000-a000-000000000030', 'friet', 4), ('c0000000-0000-4000-a000-000000000030', 'snacks', 3), ('c0000000-0000-4000-a000-000000000030', 'sauzen', 4);
 
-  -- Check-in 2 (Jan @ De Papzak)
-  ('c0000000-0000-4000-a000-000000000002', 'friturisme',       4),
-  ('c0000000-0000-4000-a000-000000000002', 'service',          4),
-  ('c0000000-0000-4000-a000-000000000002', 'prijs_kwaliteit',  3),
-  ('c0000000-0000-4000-a000-000000000002', 'friet',            4),
-  ('c0000000-0000-4000-a000-000000000002', 'snacks',           5),
-
-  -- Check-in 3 (Jan @ De Vlaamse Leeuw)
-  ('c0000000-0000-4000-a000-000000000003', 'friturisme',       3),
-  ('c0000000-0000-4000-a000-000000000003', 'friet',            4),
-  ('c0000000-0000-4000-a000-000000000003', 'snacks',           3),
-
-  -- Check-in 4 (Jan @ Het Bickyhuis)
-  ('c0000000-0000-4000-a000-000000000004', 'friturisme',       4),
-  ('c0000000-0000-4000-a000-000000000004', 'service',          5),
-  ('c0000000-0000-4000-a000-000000000004', 'prijs_kwaliteit',  4),
-  ('c0000000-0000-4000-a000-000000000004', 'bicky',            5),
-
-  -- Check-in 5 (Jan @ 't Frituurke)
-  ('c0000000-0000-4000-a000-000000000005', 'friturisme',       4),
-  ('c0000000-0000-4000-a000-000000000005', 'service',          3),
-  ('c0000000-0000-4000-a000-000000000005', 'friet',            4),
-  ('c0000000-0000-4000-a000-000000000005', 'snacks',           4),
-
-  -- Check-in 6 (Jan @ Frietketel Overpoort)
-  ('c0000000-0000-4000-a000-000000000006', 'friturisme',       3),
-  ('c0000000-0000-4000-a000-000000000006', 'service',          3),
-  ('c0000000-0000-4000-a000-000000000006', 'prijs_kwaliteit',  3),
-  ('c0000000-0000-4000-a000-000000000006', 'friet',            3),
-  ('c0000000-0000-4000-a000-000000000006', 'snacks',           3),
-
-  -- Check-in 7 (Jan @ De Gouden Saté)
-  ('c0000000-0000-4000-a000-000000000007', 'friturisme',       5),
-  ('c0000000-0000-4000-a000-000000000007', 'service',          4),
-  ('c0000000-0000-4000-a000-000000000007', 'snacks',           5),
-  ('c0000000-0000-4000-a000-000000000007', 'sauzen',           4),
-
-  -- Check-in 8 (Jan @ Frietje van 't Zuid)
-  ('c0000000-0000-4000-a000-000000000008', 'friturisme',       4),
-  ('c0000000-0000-4000-a000-000000000008', 'friet',            5),
-  ('c0000000-0000-4000-a000-000000000008', 'sauzen',           4),
-
-  -- Check-in 9 (Lies @ 't Gents Frietkot)
-  ('c0000000-0000-4000-a000-000000000009', 'friturisme',       5),
-  ('c0000000-0000-4000-a000-000000000009', 'service',          5),
-  ('c0000000-0000-4000-a000-000000000009', 'prijs_kwaliteit',  4),
-  ('c0000000-0000-4000-a000-000000000009', 'snacks',           5),
-
-  -- Check-in 10 (Lies @ Bij Martine)
-  ('c0000000-0000-4000-a000-000000000010', 'friturisme',       4),
-  ('c0000000-0000-4000-a000-000000000010', 'service',          4),
-  ('c0000000-0000-4000-a000-000000000010', 'prijs_kwaliteit',  4),
-  ('c0000000-0000-4000-a000-000000000010', 'snacks',           3),
-  ('c0000000-0000-4000-a000-000000000010', 'sauzen',           4),
-
-  -- Check-in 11 (Lies @ Chez Fernand)
-  ('c0000000-0000-4000-a000-000000000011', 'friturisme',       4),
-  ('c0000000-0000-4000-a000-000000000011', 'service',          3),
-  ('c0000000-0000-4000-a000-000000000011', 'snacks',           4),
-
-  -- Check-in 12 (Lies @ Frituur Patje)
-  ('c0000000-0000-4000-a000-000000000012', 'friturisme',       3),
-  ('c0000000-0000-4000-a000-000000000012', 'friet',            3),
-  ('c0000000-0000-4000-a000-000000000012', 'snacks',           3),
-  ('c0000000-0000-4000-a000-000000000012', 'sauzen',           4),
-
-  -- Check-in 13 (Lies @ Nen Dansen)
-  ('c0000000-0000-4000-a000-000000000013', 'friturisme',       4),
-  ('c0000000-0000-4000-a000-000000000013', 'service',          5),
-  ('c0000000-0000-4000-a000-000000000013', 'prijs_kwaliteit',  4),
-  ('c0000000-0000-4000-a000-000000000013', 'snacks',           4),
-
-  -- Check-in 14 (Lies @ De Papzak)
-  ('c0000000-0000-4000-a000-000000000014', 'friturisme',       4),
-  ('c0000000-0000-4000-a000-000000000014', 'snacks',           5),
-  ('c0000000-0000-4000-a000-000000000014', 'sauzen',           4),
-
-  -- Check-in 15 (Lies @ Frituur Gentbrugge)
-  ('c0000000-0000-4000-a000-000000000015', 'friturisme',       3),
-  ('c0000000-0000-4000-a000-000000000015', 'service',          3),
-  ('c0000000-0000-4000-a000-000000000015', 'friet',            3),
-  ('c0000000-0000-4000-a000-000000000015', 'snacks',           2),
-
-  -- Check-in 16 (Bram @ Frietketel Overpoort)
-  ('c0000000-0000-4000-a000-000000000016', 'friturisme',       3),
-  ('c0000000-0000-4000-a000-000000000016', 'service',          4),
-  ('c0000000-0000-4000-a000-000000000016', 'friet',            3),
-  ('c0000000-0000-4000-a000-000000000016', 'snacks',           4),
-  ('c0000000-0000-4000-a000-000000000016', 'sauzen',           5),
-
-  -- Check-in 17 (Bram @ Frituur Sint-Jacobs)
-  ('c0000000-0000-4000-a000-000000000017', 'friturisme',       3),
-  ('c0000000-0000-4000-a000-000000000017', 'prijs_kwaliteit',  4),
-  ('c0000000-0000-4000-a000-000000000017', 'snacks',           3),
-
-  -- Check-in 18 (Bram @ Den Bansen)
-  ('c0000000-0000-4000-a000-000000000018', 'friturisme',       4),
-  ('c0000000-0000-4000-a000-000000000018', 'service',          3),
-  ('c0000000-0000-4000-a000-000000000018', 'prijs_kwaliteit',  5),
-  ('c0000000-0000-4000-a000-000000000018', 'friet',            4),
-  ('c0000000-0000-4000-a000-000000000018', 'snacks',           4),
-
-  -- Check-in 19 (Bram @ Frietstraat)
-  ('c0000000-0000-4000-a000-000000000019', 'friturisme',       2),
-  ('c0000000-0000-4000-a000-000000000019', 'snacks',           3),
-  ('c0000000-0000-4000-a000-000000000019', 'sauzen',           3),
-
-  -- Check-in 20 (Bram @ Het Bickyhuis)
-  ('c0000000-0000-4000-a000-000000000020', 'friturisme',       4),
-  ('c0000000-0000-4000-a000-000000000020', 'service',          5),
-  ('c0000000-0000-4000-a000-000000000020', 'prijs_kwaliteit',  3),
-  ('c0000000-0000-4000-a000-000000000020', 'friet',            4),
-  ('c0000000-0000-4000-a000-000000000020', 'snacks',           4),
-
-  -- Check-in 21 (Bram @ Frituur Max)
-  ('c0000000-0000-4000-a000-000000000021', 'friturisme',       3),
-  ('c0000000-0000-4000-a000-000000000021', 'service',          3),
-  ('c0000000-0000-4000-a000-000000000021', 'friet',            3),
-
-  -- Check-in 22 (Noor @ 't Gents Frietkot)
-  ('c0000000-0000-4000-a000-000000000022', 'friturisme',       5),
-  ('c0000000-0000-4000-a000-000000000022', 'service',          4),
-  ('c0000000-0000-4000-a000-000000000022', 'snacks',           4),
-  ('c0000000-0000-4000-a000-000000000022', 'sauzen',           3),
-
-  -- Check-in 23 (Noor @ Frietje van 't Zuid)
-  ('c0000000-0000-4000-a000-000000000023', 'friturisme',       4),
-  ('c0000000-0000-4000-a000-000000000023', 'service',          4),
-  ('c0000000-0000-4000-a000-000000000023', 'prijs_kwaliteit',  3),
-  ('c0000000-0000-4000-a000-000000000023', 'friet',            4),
-  ('c0000000-0000-4000-a000-000000000023', 'snacks',           4),
-
-  -- Check-in 24 (Noor @ Frituur Muide)
-  ('c0000000-0000-4000-a000-000000000024', 'friturisme',       3),
-  ('c0000000-0000-4000-a000-000000000024', 'friet',            3),
-  ('c0000000-0000-4000-a000-000000000024', 'snacks',           2),
-
-  -- Check-in 25 (Noor @ Frituur De Kouter)
-  ('c0000000-0000-4000-a000-000000000025', 'friturisme',       3),
-  ('c0000000-0000-4000-a000-000000000025', 'service',          4),
-  ('c0000000-0000-4000-a000-000000000025', 'prijs_kwaliteit',  3),
-  ('c0000000-0000-4000-a000-000000000025', 'snacks',           3),
-
-  -- Check-in 26 (Noor @ 't Frituurke)
-  ('c0000000-0000-4000-a000-000000000026', 'friturisme',       4),
-  ('c0000000-0000-4000-a000-000000000026', 'service',          2),
-  ('c0000000-0000-4000-a000-000000000026', 'snacks',           4),
-  ('c0000000-0000-4000-a000-000000000026', 'sauzen',           3),
-
-  -- Check-in 27 (Wout @ De Vlaamse Leeuw)
-  ('c0000000-0000-4000-a000-000000000027', 'friturisme',       5),
-  ('c0000000-0000-4000-a000-000000000027', 'service',          4),
-  ('c0000000-0000-4000-a000-000000000027', 'prijs_kwaliteit',  4),
-  ('c0000000-0000-4000-a000-000000000027', 'friet',            5),
-  ('c0000000-0000-4000-a000-000000000027', 'bicky',            4),
-  ('c0000000-0000-4000-a000-000000000027', 'snacks',           4),
-  ('c0000000-0000-4000-a000-000000000027', 'sauzen',           5),
-
-  -- Check-in 28 (Wout @ Frituur Ledeberg)
-  ('c0000000-0000-4000-a000-000000000028', 'friturisme',       4),
-  ('c0000000-0000-4000-a000-000000000028', 'service',          4),
-  ('c0000000-0000-4000-a000-000000000028', 'prijs_kwaliteit',  5),
-  ('c0000000-0000-4000-a000-000000000028', 'friet',            4),
-  ('c0000000-0000-4000-a000-000000000028', 'snacks',           5),
-
-  -- Check-in 29 (Wout @ Bij Martine)
-  ('c0000000-0000-4000-a000-000000000029', 'friturisme',       4),
-  ('c0000000-0000-4000-a000-000000000029', 'service',          5),
-  ('c0000000-0000-4000-a000-000000000029', 'prijs_kwaliteit',  4),
-  ('c0000000-0000-4000-a000-000000000029', 'bicky',            4),
-  ('c0000000-0000-4000-a000-000000000029', 'snacks',           3),
-
-  -- Check-in 30 (Wout @ Nen Dansen)
-  ('c0000000-0000-4000-a000-000000000030', 'friturisme',       4),
-  ('c0000000-0000-4000-a000-000000000030', 'service',          3),
-  ('c0000000-0000-4000-a000-000000000030', 'friet',            4),
-  ('c0000000-0000-4000-a000-000000000030', 'snacks',           3),
-  ('c0000000-0000-4000-a000-000000000030', 'sauzen',           4);
-
--- 6e. Seed a couple of owner replies (Jan owns Bij Martine)
+-- 6e. Owner replies
 INSERT INTO public.owner_replies (check_in_id, user_id, text, created_at) VALUES
   ('c0000000-0000-4000-a000-000000000010', 'a1b2c3d4-0001-4000-a000-000000000001', 'Merci Lies! Die loempia gaan we verbeteren, beloofd!', now() - interval '3 days'),
   ('c0000000-0000-4000-a000-000000000029', 'a1b2c3d4-0001-4000-a000-000000000001', 'Altijd welkom Wout! Bedankt voor de mooie review.',    now() - interval '16 days');
 
 -- ============================================================
--- Done! Verify with:
--- SELECT count(*) FROM public.users;        -- 5
--- SELECT count(*) FROM public.frituren;     -- 20
--- SELECT count(*) FROM public.check_ins;    -- 30
--- SELECT count(*) FROM public.ratings;      -- 126
+-- Verify:
+-- SELECT count(*) FROM public.users;         -- 5
+-- SELECT count(*) FROM public.frituren;      -- 20
+-- SELECT count(*) FROM public.check_ins;     -- 30
+-- SELECT count(*) FROM public.ratings;       -- 126
 -- SELECT count(*) FROM public.owner_replies; -- 2
 -- ============================================================
